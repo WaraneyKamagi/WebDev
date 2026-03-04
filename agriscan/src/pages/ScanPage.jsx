@@ -2,10 +2,10 @@ import { useState, useRef, useEffect } from 'react';
 import { UploadIcon, CameraIcon, ImageIcon, CheckCircleIcon } from '../icons.jsx';
 
 const ANALYSIS_STEPS = [
-    { id: 1, label: 'Preprocessing image', delay: 0 },
-    { id: 2, label: 'Detecting plant regions', delay: 800 },
-    { id: 3, label: 'Running disease classifier', delay: 1800 },
-    { id: 4, label: 'Generating treatment plan', delay: 2600 },
+    { id: 1, label: 'Menyiapkan gambar', delay: 0 },
+    { id: 2, label: 'Mendeteksi area tanaman', delay: 800 },
+    { id: 3, label: 'Menjalankan klasifikasi AI', delay: 1800 },
+    { id: 4, label: 'Membuat saran perawatan', delay: 2600 },
 ];
 
 export default function ScanPage({ onNavigate, uploadedFile, onFileSelected }) {
@@ -21,30 +21,78 @@ export default function ScanPage({ onNavigate, uploadedFile, onFileSelected }) {
         if (uploadedFile) {
             const url = URL.createObjectURL(uploadedFile);
             setPreviewUrl(url);
-            startScan();
+            // We use a ref or an inline call to avoid useEffect dependency on startScan which is redefined on every render
             return () => URL.revokeObjectURL(url);
         }
     }, [uploadedFile]);
 
-    const startScan = () => {
+    useEffect(() => {
+        if (uploadedFile && previewUrl) {
+            startScan();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [previewUrl]); // Trigger scan only when preview URL is ready
+
+    const startScan = async () => {
         setScanning(true);
         setStepsDone([]);
         setCurrentStep(0);
         setProgress(0);
 
-        ANALYSIS_STEPS.forEach((step, i) => {
-            setTimeout(() => {
-                setCurrentStep(i);
-                setProgress(Math.round(((i + 1) / ANALYSIS_STEPS.length) * 100));
-                if (i > 0) setStepsDone(prev => [...prev, ANALYSIS_STEPS[i - 1].id]);
-            }, step.delay);
-        });
+        // Start UI progress simulation
+        const progressInterval = setInterval(() => {
+            setProgress(p => {
+                if (p < 90) return p + 5;
+                return p;
+            });
+        }, 300);
 
+        // Step 1: Preprocessing UI
         setTimeout(() => {
-            setStepsDone(ANALYSIS_STEPS.map(s => s.id));
+            setCurrentStep(1);
+            setStepsDone([1]);
+        }, 800);
+
+        // Step 2: Detecting regions UI
+        setTimeout(() => {
+            setCurrentStep(2);
+            setStepsDone([1, 2]);
+        }, 1800);
+
+        try {
+            const formData = new FormData();
+            formData.append('file', uploadedFile);
+
+            const apiUrl = import.meta.env.VITE_AI_API_URL || 'http://localhost:8002/predict';
+
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const result = await response.json();
+
+            clearInterval(progressInterval);
+            setCurrentStep(3);
+            setStepsDone([1, 2, 3]);
             setProgress(100);
-            setTimeout(() => onNavigate('results'), 600);
-        }, 3500);
+
+            setTimeout(() => {
+                setStepsDone([1, 2, 3, 4]);
+                setTimeout(() => onNavigate('results', { scanResult: result.data }), 600);
+            }, 800);
+
+        } catch (error) {
+            console.error("Error during scan:", error);
+            clearInterval(progressInterval);
+            // Handle error gracefully, maybe navigate to a generic error page
+            alert("Gagal menghubungi layanan AI. Pastikan backend sudah berjalan.");
+            setScanning(false);
+        }
     };
 
     const handleDrop = (e) => {
@@ -67,12 +115,12 @@ export default function ScanPage({ onNavigate, uploadedFile, onFileSelected }) {
                 {/* Header */}
                 <div className="scan-page__header">
                     <h1 className="scan-page__title">
-                        {scanning ? 'Analyzing Your Plant...' : 'Scan Your Plant'}
+                        {scanning ? 'Menganalisis Tanaman...' : 'Pindai Tanaman Bapak'}
                     </h1>
                     <p className="scan-page__subtitle">
                         {scanning
-                            ? 'Our AI is inspecting your image for disease signatures. Please wait a moment.'
-                            : 'Upload a clear photo of the affected tomato plant area for accurate diagnosis.'}
+                            ? 'AI kami sedang memeriksa tanda-tanda penyakit pada gambar. Mohon tunggu sejenak.'
+                            : 'Ambil foto bagian tanaman tomat yang sakit secara jelas untuk diagnosa akurat.'}
                     </p>
                 </div>
 
@@ -83,7 +131,7 @@ export default function ScanPage({ onNavigate, uploadedFile, onFileSelected }) {
                             <div className="image-card__toolbar">
                                 <span className="image-card__name">
                                     <ImageIcon size={16} color="var(--color-primary)" />
-                                    {uploadedFile ? uploadedFile.name : 'No image selected'}
+                                    {uploadedFile ? uploadedFile.name : 'Belum ada gambar terpilih'}
                                 </span>
                                 {uploadedFile && (
                                     <span className="image-card__meta">
@@ -101,7 +149,7 @@ export default function ScanPage({ onNavigate, uploadedFile, onFileSelected }) {
                                             <div className="scanning-overlay__ring">
                                                 <div className="scanning-overlay__spinner" />
                                             </div>
-                                            <span className="scanning-overlay__text">AI Scanning...</span>
+                                            <span className="scanning-overlay__text">Pemindaian AI...</span>
                                         </div>
                                     )}
                                 </div>
@@ -124,8 +172,8 @@ export default function ScanPage({ onNavigate, uploadedFile, onFileSelected }) {
                                     <div className="dropzone__icon">
                                         <UploadIcon size={28} color="var(--color-primary)" />
                                     </div>
-                                    <div className="dropzone__title">Drop or click to upload</div>
-                                    <p className="dropzone__subtitle">JPG, PNG, WEBP · Max 10MB</p>
+                                    <div className="dropzone__title">Lepas atau klik untuk memilih</div>
+                                    <p className="dropzone__subtitle">JPG, PNG, WEBP · Maks 10MB</p>
                                 </div>
                             )}
                         </div>
@@ -139,11 +187,11 @@ export default function ScanPage({ onNavigate, uploadedFile, onFileSelected }) {
                                     onClick={() => fileRef.current?.click()}
                                 >
                                     <UploadIcon size={17} color="white" />
-                                    {previewUrl ? 'Replace Image' : 'Upload Image'}
+                                    {previewUrl ? 'Ganti Gambar' : 'Ambil Gambar'}
                                 </button>
                                 <button className="btn btn-outline btn-lg" style={{ flex: 1 }}>
                                     <CameraIcon size={17} color="currentColor" />
-                                    Use Camera
+                                    Gunakan Kamera
                                 </button>
                                 {previewUrl && (
                                     <button
@@ -151,7 +199,7 @@ export default function ScanPage({ onNavigate, uploadedFile, onFileSelected }) {
                                         style={{ flex: 1 }}
                                         onClick={startScan}
                                     >
-                                        Analyze Now
+                                        Analisis Sekarang
                                     </button>
                                 )}
                             </div>
@@ -162,7 +210,7 @@ export default function ScanPage({ onNavigate, uploadedFile, onFileSelected }) {
                     <div className="scan-sidebar">
                         {/* Progress Card */}
                         <div className="sidebar-card">
-                            <div className="sidebar-card__title">Analysis Progress</div>
+                            <div className="sidebar-card__title">Kemajuan Analisis</div>
                             <div className="progress-bar">
                                 <div
                                     className="progress-bar__fill"
@@ -170,26 +218,25 @@ export default function ScanPage({ onNavigate, uploadedFile, onFileSelected }) {
                                 />
                             </div>
                             <div className="progress-label">
-                                <span>{scanning ? 'Processing...' : progress === 100 ? 'Complete' : 'Waiting'}</span>
+                                <span>{scanning ? 'Memproses...' : progress === 100 ? 'Selesai' : 'Menunggu'}</span>
                                 <span>{progress}%</span>
                             </div>
                         </div>
 
                         {/* Steps Card */}
                         <div className="sidebar-card">
-                            <div className="sidebar-card__title">Detection Pipeline</div>
+                            <div className="sidebar-card__title">Alur Deteksi AI</div>
                             <div className="analysis-steps">
                                 {ANALYSIS_STEPS.map((step, i) => {
                                     const isDone = stepsDone.includes(step.id);
                                     const isLoading = scanning && currentStep === i && !isDone;
-                                    const isPending = !isDone && !isLoading;
 
                                     return (
                                         <div className="analysis-step" key={step.id}>
                                             <div
                                                 className={`analysis-step__icon ${isDone ? 'analysis-step__icon--done' :
-                                                        isLoading ? 'analysis-step__icon--loading' :
-                                                            'analysis-step__icon--pending'
+                                                    isLoading ? 'analysis-step__icon--loading' :
+                                                        'analysis-step__icon--pending'
                                                     }`}
                                             >
                                                 {isDone ? (
@@ -204,7 +251,7 @@ export default function ScanPage({ onNavigate, uploadedFile, onFileSelected }) {
                                             </div>
                                             <span className="analysis-step__label">{step.label}</span>
                                             <span className={`analysis-step__status ${isDone ? 'status-done' : isLoading ? 'status-loading' : 'status-pending'}`}>
-                                                {isDone ? 'Done' : isLoading ? 'Running' : 'Pending'}
+                                                {isDone ? 'Selesai' : isLoading ? 'Berjalan' : 'Menunggu'}
                                             </span>
                                         </div>
                                     );
@@ -214,13 +261,13 @@ export default function ScanPage({ onNavigate, uploadedFile, onFileSelected }) {
 
                         {/* Tips Card */}
                         <div className="sidebar-card">
-                            <div className="sidebar-card__title">Photo Tips</div>
+                            <div className="sidebar-card__title">Tips Pengambilan Foto</div>
                             <div className="tips-list">
                                 {[
-                                    { icon: '☀️', text: 'Use natural daylight for best results' },
-                                    { icon: '🔍', text: 'Focus on the most affected area' },
-                                    { icon: '📏', text: 'Keep camera 15-30cm from the leaf' },
-                                    { icon: '🚫', text: 'Avoid blurry or dark images' },
+                                    { icon: '☀️', text: 'Gunakan cahaya alami (siang hari)' },
+                                    { icon: '🔍', text: 'Fokus pada area yang paling sakit' },
+                                    { icon: '📏', text: 'Jarak kamera 15-30cm dari daun' },
+                                    { icon: '🚫', text: 'Hindari gambar buram atau gelap' },
                                 ].map((tip, i) => (
                                     <div className="tip-item" key={i}>
                                         <span className="tip-item__icon">{tip.icon}</span>
