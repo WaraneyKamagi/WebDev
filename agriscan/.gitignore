@@ -24,4 +24,4 @@ dist-ssr
 *.sw?
 
 dataset/
-model/train_sota.py
+train_sota.py
