@@ -10,7 +10,7 @@ const TIPS = {
     blurry: [
         { icon: '🔍', text: 'Pegang kamera dengan stabil atau sandarkan ke permukaan' },
         { icon: '☀️', text: 'Pastikan cahaya cukup agar kamera dapat fokus' },
-        { icon: '衡量', text: 'Jaga jarak 15–30cm dari daun untuk fokus terbaik' },
+        { icon: '📐', text: 'Jaga jarak 15–30cm dari daun untuk fokus terbaik' },
         { icon: '⏱️', text: 'Tunggu kamera fokus otomatis sebelum memotret' },
     ],
 };

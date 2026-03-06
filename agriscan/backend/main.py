@@ -6,6 +6,8 @@ import torch.nn as nn
 from torchvision import transforms, models
 from PIL import Image
 
+from rembg import remove
+
 app = FastAPI()
 
 app.add_middleware(
@@ -53,13 +55,12 @@ async def load_model():
     except Exception as e:
         print("Failed to load SOTA model:", e)
 
-def transform_image(image_bytes):
+def transform_image(image):
     transform = transforms.Compose([
         transforms.Resize((384, 384)), # SOTA Model uses 384x384 for high detail
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
     ])
-    image = Image.open(io.BytesIO(image_bytes)).convert("RGB")
     return transform(image).unsqueeze(0).to(DEVICE)
 
 @app.get("/")
@@ -73,18 +74,49 @@ async def predict(file: UploadFile = File(...)):
     
     try:
         image_bytes = await file.read()
-        img_tensor = transform_image(image_bytes)
+        # 1. Load original image
+        original_image = Image.open(io.BytesIO(image_bytes)).convert("RGB")
         
+        # --- BACKGROUND REMOVAL ---
+        print("Removing background for focus analysis...")
+        bg_removed = remove(original_image)
+        
+        # Handle transparency (convert to white background)
+        if bg_removed.mode == 'RGBA':
+            clean_image = Image.new("RGB", bg_removed.size, (255, 255, 255))
+            clean_image.paste(bg_removed, mask=bg_removed.split()[3])
+        else:
+            clean_image = bg_removed.convert("RGB")
+
+        # 2. TRANSFORM BOTH IMAGES
+        orig_tensor = transform_image(original_image)
+        clean_tensor = transform_image(clean_image)
+        
+        # 3. RUN ENSEMBLE PREDICTION
         with torch.no_grad():
-            outputs = MODEL(img_tensor)
-            probs = torch.nn.functional.softmax(outputs, dim=1)[0]
+            # Predict Original
+            out_orig = MODEL(orig_tensor)
+            prob_orig = torch.nn.functional.softmax(out_orig, dim=1)[0]
+            conf_orig, idx_orig = prob_orig.topk(1)
+            
+            # Predict Cleaned
+            out_clean = MODEL(clean_tensor)
+            prob_clean = torch.nn.functional.softmax(out_clean, dim=1)[0]
+            conf_clean, idx_clean = prob_clean.topk(1)
+
+        # 4. ADAPTIVE LOGIC: Pick the one with higher confidence
+        if conf_clean.item() > conf_orig.item():
+            confidence = round(conf_clean.item() * 100, 2)
+            idx = idx_clean.item()
+            mode = "High Focus (Cleaned)"
+        else:
+            confidence = round(conf_orig.item() * 100, 2)
+            idx = idx_orig.item()
+            mode = "Context Aware (Original)"
         
-        top_prob, top_idx = probs.topk(1)
-        confidence = round(top_prob.item() * 100, 2)
-        idx = top_idx.item()
-        
+        print(f"Prediction Mode: {mode} | Confidence: {confidence}%")
+
         # --- BENTENG KEAMANAN (GUARDRAIL) ---
-        # Jika AI ragu (dibawah 85%), kita beri peringatan daripada salah diagnosa
         if confidence < 85.0:
             return {
                 "success": True,
@@ -106,9 +138,17 @@ async def predict(file: UploadFile = File(...)):
         if disease_name.lower() == "healthy":
             severity = "None"
             severity_class = "severity-none"
+            condition_msg = "Tanaman Bapak terlihat sehat dan segar. Pertahankan perawatan rutin."
         else:
-            severity = "High" if confidence > 90 else "Medium"
-            severity_class = "severity-high" if confidence > 90 else "severity-medium"
+            severity = "High" if confidence > 92 else "Medium"
+            severity_class = "severity-high" if confidence > 92 else "severity-medium"
+            
+            if confidence > 96:
+                condition_msg = f"Gejala {disease_name} terlihat sangat jelas dan meluas. Diperlukan tindakan segera."
+            elif confidence > 90:
+                condition_msg = f"Terdeteksi indikasi kuat {disease_name}. Sebaiknya segera lakukan penanganan untuk mencegah penyebaran."
+            else:
+                condition_msg = f"Ada tanda-tanda awal {disease_name}. Pantau perkembangan dan bersihkan area terdampak secepatnya."
 
         return {
             "success": True,
@@ -118,6 +158,8 @@ async def predict(file: UploadFile = File(...)):
                 "confidence": confidence,
                 "severity": severity,
                 "severityClass": severity_class,
+                "condition": condition_msg,
+                "processingMode": mode,
                 "related": []
             }
         }

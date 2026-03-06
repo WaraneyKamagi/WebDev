@@ -24,9 +24,9 @@ const DISEASE_DATABASE = {
             { icon: '🌱', label: 'Benih Unggul', tip: 'Gunakan benih bersertifikat bebas bakteri' }
         ],
         tags: [
-            { label: 'Penyakit Bakteri', type: 'error' },
-            { label: 'Sangat Menular', type: 'warning' },
-            { label: 'Bisa Diobati', type: 'primary' }
+            { label: 'Bacterial Disease', type: 'error' },
+            { label: 'Act Quickly', type: 'warning' },
+            { label: 'Treatable', type: 'primary' }
         ]
     },
     'Early blight': {
@@ -51,9 +51,9 @@ const DISEASE_DATABASE = {
             { icon: '🩹', label: 'Mulsa Tanah', tip: 'Cegah spora naik saat disiram' }
         ],
         tags: [
-            { label: 'Penyakit Jamur', type: 'error' },
-            { label: 'Segera Tangani', type: 'warning' },
-            { label: 'Bisa Diobati', type: 'primary' }
+            { label: 'Fungal Disease', type: 'error' },
+            { label: 'Act Quickly', type: 'warning' },
+            { label: 'Treatable', type: 'primary' }
         ]
     },
     'Late blight': {
@@ -78,9 +78,9 @@ const DISEASE_DATABASE = {
             { icon: '🛡️', label: 'Proteksi Preventif', tip: 'Semprot fungisida sebelum musim hujan' }
         ],
         tags: [
-            { label: 'Penyakit Jamur', type: 'error' },
-            { label: 'Sangat Berbahaya', type: 'warning' },
-            { label: 'Tindakan Cepat', type: 'primary' }
+            { label: 'Fungal Disease', type: 'error' },
+            { label: 'Highly Dangerous', type: 'warning' },
+            { label: 'Urgent Care', type: 'primary' }
         ]
     },
     'Leaf Mold': {
@@ -105,9 +105,9 @@ const DISEASE_DATABASE = {
             { icon: '🌡️', label: 'Kontrol Kelembaban', tip: 'Usahakan RH di bawah 85%' }
         ],
         tags: [
-            { label: 'Penyakit Jamur', type: 'error' },
-            { label: 'Kelembaban Tinggi', type: 'warning' },
-            { label: 'Bisa Dicegah', type: 'primary' }
+            { label: 'Fungal Disease', type: 'error' },
+            { label: 'High Humidity', type: 'warning' },
+            { label: 'Preventable', type: 'primary' }
         ]
     },
     'Septoria leaf spot': {
@@ -132,9 +132,9 @@ const DISEASE_DATABASE = {
             { icon: '💧', label: 'Aliran Air', tip: 'Perbaiki drainase agar tidak menggenang' }
         ],
         tags: [
-            { label: 'Penyakit Jamur', type: 'error' },
-            { label: 'Masalah Daun', type: 'warning' },
-            { label: 'Bisa Diobati', type: 'primary' }
+            { label: 'Fungal Disease', type: 'error' },
+            { label: 'Leaf Issue', type: 'warning' },
+            { label: 'Treatable', type: 'primary' }
         ]
     },
     'Spider mites Two-spotted_spider_mite': {
@@ -159,9 +159,9 @@ const DISEASE_DATABASE = {
             { icon: '🔍', label: 'Cek Rutin', tip: 'Amati bagian bawah daun tiap pagi' }
         ],
         tags: [
-            { label: 'Hama Tanaman', type: 'error' },
-            { label: 'Cuaca Panas', type: 'warning' },
-            { label: 'Bisa Dibasmi', type: 'primary' }
+            { label: 'Plant Pest', type: 'error' },
+            { label: 'Dry Weather', type: 'warning' },
+            { label: 'Eradicable', type: 'primary' }
         ]
     },
     'Target Spot': {
@@ -186,9 +186,9 @@ const DISEASE_DATABASE = {
             { icon: '🔄', label: 'Pola Tanam', tip: 'Hindari inang bersilangan' }
         ],
         tags: [
-            { label: 'Penyakit Jamur', type: 'error' },
-            { label: 'Mirip Hawar', type: 'warning' },
-            { label: 'Bisa Diobati', type: 'primary' }
+            { label: 'Fungal Disease', type: 'error' },
+            { label: 'Blight-like', type: 'warning' },
+            { label: 'Treatable', type: 'primary' }
         ]
     },
     'Tomato Yellow Leaf Curl Virus': {
@@ -213,9 +213,9 @@ const DISEASE_DATABASE = {
             { icon: '🚫', label: 'Bibit Sehat', tip: 'Pastikan bibit bebas virus sejak semai' }
         ],
         tags: [
-            { label: 'Infeksi Virus', type: 'error' },
-            { label: 'Vektor Kutu', type: 'warning' },
-            { label: 'Tanpa Obat', type: 'primary' }
+            { label: 'Viral Infection', type: 'error' },
+            { label: 'Whitefly Vektor', type: 'warning' },
+            { label: 'No Remedy', type: 'primary' }
         ]
     },
     'Tomato mosaic virus': {
@@ -240,9 +240,9 @@ const DISEASE_DATABASE = {
             { icon: '🚫', label: 'Interaksi Terbatas', tip: 'Kurangi kontak fisik antar tanaman' }
         ],
         tags: [
-            { label: 'Infeksi Virus', type: 'error' },
-            { label: 'Sangat Stabil', type: 'warning' },
-            { label: 'Protokol Ketat', type: 'primary' }
+            { label: 'Viral Infection', type: 'error' },
+            { label: 'Highly Stable', type: 'warning' },
+            { label: 'Strict Protocol', type: 'primary' }
         ]
     },
     'healthy': {
@@ -267,19 +267,28 @@ const DISEASE_DATABASE = {
             { icon: '☀️', label: 'Cahaya Cukup', tip: 'Pastikan sinar matahari minimal 6 jam' }
         ],
         tags: [
-            { label: 'Tanaman Sehat', type: 'primary' },
-            { label: 'Pertumbuhan Baik', type: 'warning' },
-            { label: 'Lanjutkan', type: 'primary' }
+            { label: 'Healthy Plant', type: 'primary' },
+            { label: 'Good Vigor', type: 'warning' },
+            { label: 'Optimal', type: 'primary' }
         ]
     }
 };
 
 export default function ResultsPage({ onNavigate, previewUrl, scanResult }) {
-    const [confWidth, setConfWidth] = useState(0);
-
     // Dynamic resolution from the expert database
     const rawName = scanResult?.name || 'healthy';
-    const dbEntry = DISEASE_DATABASE[rawName] || DISEASE_DATABASE['healthy'];
+
+    // Robust lookup: try exact match first, then normalized
+    let dbEntry = DISEASE_DATABASE[rawName];
+
+    if (!dbEntry && scanResult?.name) {
+        const normalize = (str) => str.toLowerCase().replace(/[^a-z0-9]/g, '');
+        const target = normalize(rawName);
+        const foundKey = Object.keys(DISEASE_DATABASE).find(k => normalize(k) === target);
+        if (foundKey) dbEntry = DISEASE_DATABASE[foundKey];
+    }
+
+    if (!dbEntry) dbEntry = DISEASE_DATABASE['healthy'];
 
     const resultData = {
         ...dbEntry,
@@ -287,6 +296,7 @@ export default function ResultsPage({ onNavigate, previewUrl, scanResult }) {
         severity: scanResult?.severity || 'Normal',
         severityClass: scanResult?.severityClass || 'severity-none',
         note: scanResult?.note,
+        condition: scanResult?.condition, // New field from backend
         related: scanResult?.related || []
     };
 
@@ -299,15 +309,10 @@ export default function ResultsPage({ onNavigate, previewUrl, scanResult }) {
         resultData.symptoms = ["Gangguan visual terdeteksi", "Fitur kurang jelas"];
         resultData.treatments = ["Foto ulang dengan cahaya lebih terang", "Dekatkan kamera ke permukaan daun"];
         resultData.tags = [
-            { label: 'Tidak Pasti', type: 'warning' },
-            { label: 'Foto Ulang', type: 'primary' }
+            { label: 'Uncertain', type: 'warning' },
+            { label: 'Re-scan', type: 'primary' }
         ];
     }
-
-    useEffect(() => {
-        const t = setTimeout(() => setConfWidth(resultData.confidence), 200);
-        return () => clearTimeout(t);
-    }, [resultData.confidence]);
 
     return (
         <div className="results-page">
@@ -325,9 +330,9 @@ export default function ResultsPage({ onNavigate, previewUrl, scanResult }) {
                     <h1 className="results-header__title">Hasil Diagnosa</h1>
                     <div className="results-header__meta">
                         <ClockIcon size={13} color="currentColor" />
-                        <span>Analisis selesai dalam 2.4 detik</span>
+                        <span>Analisis selesai</span>
                         <span style={{ color: 'var(--color-border)' }}>·</span>
-                        <span style={{ color: 'var(--color-success)', fontWeight: 600 }}>✓ Terverifikasi AI</span>
+                        <span style={{ color: 'var(--color-text-muted)' }}>Proses Lokal (Tanpa Database)</span>
                     </div>
                 </div>
                 <div style={{ marginLeft: 'auto', display: 'flex', gap: '10px' }}>
@@ -378,14 +383,7 @@ export default function ResultsPage({ onNavigate, previewUrl, scanResult }) {
                         <div className="disease-card__name">{resultData.name}</div>
                         <div className="disease-card__sci-name">{resultData.sciName}</div>
 
-                        <div className="confidence-row">
-                            <span className="confidence-label">Kepercayaan AI</span>
-                            <span className="confidence-value">{resultData.confidence}%</span>
-                        </div>
-                        <div className="confidence-bar">
-                            <div className="confidence-bar__fill" style={{ width: `${confWidth}%` }} />
-                        </div>
-
+                        {/* Tags moved to match image exactly */}
                         <div className="disease-card__tags">
                             {resultData.tags?.map((tag, i) => (
                                 <span key={i} className={`tag tag-${tag.type}`}>{tag.label}</span>
@@ -409,13 +407,12 @@ export default function ResultsPage({ onNavigate, previewUrl, scanResult }) {
                             <div className="related-list">
                                 {resultData.related.map((r, i) => (
                                     <div className="related-item" key={i}>
-                                        <div className="related-item__bar-wrap">
-                                            <div className="related-item__name">{r.name}</div>
+                                        <div className="related-item__name">{r.name}</div>
+                                        <div className="related-item__bar-wrap" style={{ width: '60px' }}>
                                             <div className="related-item__bar">
                                                 <div className="related-item__bar-fill" style={{ width: `${r.pct * 10}%` }} />
                                             </div>
                                         </div>
-                                        <span className="related-item__pct">{r.pct}%</span>
                                     </div>
                                 ))}
                             </div>
@@ -431,6 +428,19 @@ export default function ResultsPage({ onNavigate, previewUrl, scanResult }) {
                             <div className="result-section__title-icon">📋</div>
                             Ikhtisar Penyakit
                         </div>
+                        {resultData.condition && (
+                            <p className="result-condition-msg" style={{
+                                fontWeight: '600',
+                                color: 'var(--color-primary)',
+                                padding: '10px',
+                                background: 'var(--color-primary-bg)',
+                                borderRadius: '8px',
+                                marginBottom: '12px',
+                                fontSize: '14px'
+                            }}>
+                                💡 {resultData.condition}
+                            </p>
+                        )}
                         <p className="result-desc">{resultData.description}</p>
                     </div>
 
@@ -454,13 +464,16 @@ export default function ResultsPage({ onNavigate, previewUrl, scanResult }) {
                     <div className="result-section">
                         <div className="result-section__title">
                             <div className="result-section__title-icon">💊</div>
-                            Saran Perawatan
+                            Saran Perawatan {resultData.severity === 'High' ? '(Tindakan Intensif)' : '(Tindakan Awal)'}
                         </div>
                         <div className="treatment-list">
-                            {resultData.treatments.map((t, i) => (
+                            {(resultData.severity === 'High'
+                                ? [...resultData.treatments].reverse() // Show most critical first if high severity
+                                : resultData.treatments
+                            ).map((t, i) => (
                                 <div className="treatment-item" key={i}>
-                                    <div className="treatment-item__num">{i + 1}</div>
-                                    <span className="treatment-item__text">{t}</span>
+                                    <div className="treatment-item__num" style={resultData.severity === 'High' && i === 0 ? { background: 'var(--color-error)', color: 'white' } : {}}>{i + 1}</div>
+                                    <span className="treatment-item__text" style={resultData.severity === 'High' && i === 0 ? { fontWeight: '700' } : {}}>{t}</span>
                                 </div>
                             ))}
                         </div>
