@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import './index.css';
-import './App.css';
 
 import Navbar from './components/Navbar.jsx';
 import HomePage from './pages/HomePage.jsx';
@@ -37,16 +36,10 @@ export default function App() {
   const navPage = page === 'scanning' ? 'scan' : page;
 
   return (
-    <div className="app">
-      {/* Background decorations */}
-      <div className="bg-decoration">
-        <div className="bg-blob bg-blob--1" />
-        <div className="bg-blob bg-blob--2" />
-      </div>
-
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 font-sans text-slate-900 dark:text-slate-100 selection:bg-primary/20 selection:text-primary transition-colors duration-300">
       <Navbar onNavigate={navigate} activePage={navPage} />
 
-      <div className="page-content">
+      <main className="w-full">
 
         {/* Page Routing */}
         {page === 'home' && (
@@ -79,7 +72,7 @@ export default function App() {
             previewUrl={previewUrl}
           />
         )}
-      </div>
+      </main>
     </div>
   );
 }

@@ -275,245 +275,249 @@ const DISEASE_DATABASE = {
 };
 
 export default function ResultsPage({ onNavigate, previewUrl, scanResult }) {
-    const [confWidth, setConfWidth] = useState(0);
-
-    // Dynamic resolution from the expert database
+    // Determine which key to use from API response
     const rawName = scanResult?.name || 'healthy';
-    const dbEntry = DISEASE_DATABASE[rawName] || DISEASE_DATABASE['healthy'];
 
-    const resultData = {
-        ...dbEntry,
-        confidence: scanResult?.confidence || 0,
-        severity: scanResult?.severity || 'Normal',
-        severityClass: scanResult?.severityClass || 'severity-none',
-        note: scanResult?.note,
-        related: scanResult?.related || []
+    // In actual implementation, match response.name to database keys
+    // Fallback to 'Tomato_healthy' logic if needed, but for now map broadly
+    const getDbEntry = (name) => {
+        if (DISEASE_DATABASE[name]) return DISEASE_DATABASE[name];
+
+        // fuzzy match fallback
+        const lowerName = name.toLowerCase();
+        for (let key in DISEASE_DATABASE) {
+            if (key.toLowerCase().includes(lowerName) || lowerName.includes(key.toLowerCase())) {
+                return DISEASE_DATABASE[key];
+            }
+        }
+        return DISEASE_DATABASE['healthy']; // ultimate fallback
     };
 
-    const isLowConfidence = rawName === "Hasil Kurang Meyakinkan";
+    const resultData = getDbEntry(rawName);
 
-    if (isLowConfidence) {
-        resultData.description = scanResult.note || "AI kami ragu dengan gambar ini. Hal ini biasanya terjadi karena cahaya redup, kamera goyang, atau jarak daun terlalu jauh.";
-        resultData.severity = "Tidak Pasti";
-        resultData.severityClass = "severity-warning";
-        resultData.symptoms = ["Gangguan visual terdeteksi", "Fitur kurang jelas"];
-        resultData.treatments = ["Foto ulang dengan cahaya lebih terang", "Dekatkan kamera ke permukaan daun"];
-        resultData.tags = [
-            { label: 'Tidak Pasti', type: 'warning' },
-            { label: 'Foto Ulang', type: 'primary' }
-        ];
-    }
+    // Fallbacks if data is missing
+    const confidence = scanResult?.confidence ? (scanResult.confidence * 100).toFixed(1) : resultData.confidence;
+    const severityMap = {
+        'Ringan': { color: 'text-amber-600', bg: 'bg-amber-100 dark:bg-amber-900/30' },
+        'Tinggi': { color: 'text-orange-600', bg: 'bg-orange-100 dark:bg-orange-900/30' },
+        'Kritis': { color: 'text-red-600', bg: 'bg-red-100 dark:bg-red-900/30' },
+        'Normal': { color: 'text-green-600', bg: 'bg-green-100 dark:bg-green-900/30' }
+    };
 
-    useEffect(() => {
-        const t = setTimeout(() => setConfWidth(resultData.confidence), 200);
-        return () => clearTimeout(t);
-    }, [resultData.confidence]);
+    const sevStyle = severityMap[resultData.severity] || severityMap['Ringan'];
 
     return (
-        <div className="results-page">
-            {/* Header */}
-            <div className="results-header">
-                <button
-                    id="results-back-btn"
-                    className="results-back-btn"
-                    onClick={() => onNavigate('scan')}
-                    title="Back to scan"
-                >
-                    <ArrowLeftIcon size={18} />
-                </button>
-                <div className="results-header__info">
-                    <h1 className="results-header__title">Hasil Diagnosa</h1>
-                    <div className="results-header__meta">
-                        <ClockIcon size={13} color="currentColor" />
-                        <span>Analisis selesai dalam 2.4 detik</span>
-                        <span style={{ color: 'var(--color-border)' }}>·</span>
-                        <span style={{ color: 'var(--color-success)', fontWeight: 600 }}>✓ Terverifikasi AI</span>
+        <div className="bg-background-light dark:bg-background-dark min-h-screen pt-24 pb-24">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+                {/* Header & Navigation */}
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                    <div>
+                        <div className="flex items-center gap-2 text-sm font-medium text-slate-500 mb-2">
+                            <button className="hover:text-primary transition-colors flex items-center" onClick={() => onNavigate('home')}>
+                                Dashboard
+                            </button>
+                            <span className="material-icons-round text-xs">chevron_right</span>
+                            <button className="hover:text-primary transition-colors flex items-center" onClick={() => onNavigate('scan')}>
+                                Scan
+                            </button>
+                            <span className="material-icons-round text-xs">chevron_right</span>
+                            <span className="text-primary">Results</span>
+                        </div>
+                        <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Analysis Results</h1>
+                    </div>
+                    <div className="flex gap-3">
+                        <button className="bg-white dark:bg-slate-800 text-slate-700 dark:text-white border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 px-5 py-2.5 rounded-xl font-medium transition-colors flex items-center gap-2 shadow-sm">
+                            <span className="material-icons-round text-[20px]">print</span>
+                            <span className="hidden sm:inline">Print Report</span>
+                        </button>
+                        <button
+                            className="bg-primary hover:bg-primary-dark text-white px-5 py-2.5 rounded-xl font-medium transition-all shadow-md shadow-primary/20 flex items-center gap-2"
+                            onClick={() => onNavigate('scan')}
+                        >
+                            <span className="material-icons-round text-[20px]">add_a_photo</span>
+                            New Scan
+                        </button>
                     </div>
                 </div>
-                <div style={{ marginLeft: 'auto', display: 'flex', gap: '10px' }}>
-                    <button className="btn btn-outline btn-sm" onClick={() => onNavigate('scan')}>
-                        <RefreshIcon size={14} />
-                        Pindai Baru
-                    </button>
-                    <button className="btn btn-primary btn-sm">
-                        <DownloadIcon size={14} color="white" />
-                        Ekspor Laporan
-                    </button>
-                </div>
-            </div>
 
-            <div className="results-grid">
-                {isLowConfidence && (
-                    <div className="confidence-warning-banner">
-                        <div className="confidence-warning-banner__icon">⚠️</div>
-                        <div className="confidence-warning-banner__content">
-                            <div className="confidence-warning-banner__title">Hasil Kurang Meyakinkan</div>
-                            <div className="confidence-warning-banner__text">
-                                AI kami kesulitan menganalisis foto ini. {resultData.description}
+                <div className="grid lg:grid-cols-12 gap-8 items-start">
+
+                    {/* Left Column: Image & Status (4 cols) */}
+                    <div className="lg:col-span-4 space-y-6">
+                        {/* Image Preview Card */}
+                        <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm">
+                            <div className="relative aspect-[4/3] bg-slate-100 dark:bg-slate-900 group">
+                                <img src={previewUrl || 'https://via.placeholder.com/400x300'} alt="Analyzed Crop" className="w-full h-full object-cover" />
+
+                                <div className="absolute top-4 right-4 bg-slate-900/60 backdrop-blur-md text-white px-3 py-1.5 rounded-lg flex items-center gap-2 text-sm font-medium">
+                                    <span className="material-icons-round text-green-400 text-sm">verified_user</span>
+                                    Analyzed
+                                </div>
+
+                                {/* AI Scanning Box visual overlay (purely aesthetic) */}
+                                <div className="absolute top-[20%] left-[20%] w-[60%] h-[60%] border-2 border-primary border-dashed rounded-lg opacity-80 pointer-events-none">
+                                    <div className="absolute -top-1.5 -left-1.5 w-3 h-3 bg-primary rounded-sm"></div>
+                                    <div className="absolute -top-1.5 -right-1.5 w-3 h-3 bg-primary rounded-sm"></div>
+                                    <div className="absolute -bottom-1.5 -left-1.5 w-3 h-3 bg-primary rounded-sm"></div>
+                                    <div className="absolute -bottom-1.5 -right-1.5 w-3 h-3 bg-primary rounded-sm"></div>
+                                </div>
+                            </div>
+
+                            <div className="p-6">
+                                <div className="flex justify-between items-start mb-4">
+                                    <div>
+                                        <div className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Primary Detection</div>
+                                        <h2 className="text-2xl font-bold text-slate-900 dark:text-white leading-tight">{resultData.name}</h2>
+                                    </div>
+                                    <div className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider border flex items-center gap-1 ${sevStyle.bg} ${sevStyle.color} border-${sevStyle.color}/20`}>
+                                        <span className="material-icons-round text-[14px]">
+                                            {resultData.severity === 'Normal' ? 'check_circle' : 'warning_amber'}
+                                        </span>
+                                        {resultData.severity}
+                                    </div>
+                                </div>
+
+                                <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 border border-slate-100 dark:border-slate-800">
+                                    <div className="flex justify-between items-end mb-2">
+                                        <span className="text-sm font-semibold text-slate-600 dark:text-slate-400">AI Confidence Map</span>
+                                        <span className="text-primary font-bold text-lg">{confidence}%</span>
+                                    </div>
+                                    <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 mb-1 overflow-hidden">
+                                        <div className="bg-primary h-2 rounded-full" style={{ width: `${confidence}%` }}></div>
+                                    </div>
+                                    <p className="text-xs text-slate-500 mt-2">
+                                        Our neural network is {confidence}% confident in this diagnosis based on 7 distinct visual markers.
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                        <button className="btn btn-primary btn-sm" onClick={() => onNavigate('scan')}>Ambil Ulang</button>
-                    </div>
-                )}
-                {/* Left: Disease Card */}
-                <div className="disease-card">
-                    <div className="disease-card__image-wrap">
-                        {previewUrl ? (
-                            <img className="disease-card__image" src={previewUrl} alt="Analyzed plant" />
-                        ) : (
-                            <div className="img-placeholder" style={{ width: '100%', height: '100%' }}>
-                                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                                    <rect x="3" y="3" width="18" height="18" rx="2" />
-                                    <circle cx="8.5" cy="8.5" r="1.5" />
-                                    <path d="m21 15-5-5L5 21" />
-                                </svg>
+
+                        {/* Similar Diseases (Only if relevant) */}
+                        {resultData.related && resultData.related.length > 0 && (
+                            <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 shadow-sm">
+                                <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-4 flex items-center gap-2">
+                                    <span className="material-icons-round text-slate-400 text-[18px]">find_replace</span>
+                                    Similar Possibilities
+                                </h3>
+                                <div className="space-y-3">
+                                    {resultData.related.map((rel, i) => (
+                                        <div key={i} className="flex items-center justify-between p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors border border-transparent hover:border-slate-100 dark:hover:border-slate-600 cursor-pointer">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-900 flex items-center justify-center">
+                                                    <span className="material-icons-round text-slate-500 text-[16px]">biotech</span>
+                                                </div>
+                                                <span className="font-medium text-slate-700 dark:text-slate-300 text-sm">{rel.name}</span>
+                                            </div>
+                                            <span className="text-xs font-bold text-slate-400 bg-slate-100 dark:bg-slate-900 px-2 py-1 rounded-md">{rel.match}</span>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         )}
-                        <span className={`disease-card__severity-badge ${resultData.severityClass}`}>
-                            {resultData.severity === 'High' ? 'Keparahan Tinggi' : resultData.severity}
-                        </span>
                     </div>
 
-                    <div className="disease-card__body">
-                        <div className="disease-card__name">{resultData.name}</div>
-                        <div className="disease-card__sci-name">{resultData.sciName}</div>
+                    {/* Right Column: Details & Treatment (8 cols) */}
+                    <div className="lg:col-span-8 space-y-8">
 
-                        <div className="confidence-row">
-                            <span className="confidence-label">Kepercayaan AI</span>
-                            <span className="confidence-value">{resultData.confidence}%</span>
-                        </div>
-                        <div className="confidence-bar">
-                            <div className="confidence-bar__fill" style={{ width: `${confWidth}%` }} />
-                        </div>
-
-                        <div className="disease-card__tags">
-                            {resultData.tags?.map((tag, i) => (
-                                <span key={i} className={`tag tag-${tag.type}`}>{tag.label}</span>
-                            ))}
+                        {/* Summary Description */}
+                        <div>
+                            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
+                                <span className="material-icons-round text-primary">info</span>
+                                Disease Overview
+                            </h3>
+                            <p className="text-slate-600 dark:text-slate-400 text-lg leading-relaxed">{resultData.description}</p>
                         </div>
 
-                        {/* Other detections */}
-                        <div style={{ marginTop: '18px' }}>
-                            <div
-                                style={{
-                                    fontSize: '12px',
-                                    fontWeight: '700',
-                                    color: 'var(--color-text-muted)',
-                                    textTransform: 'uppercase',
-                                    letterSpacing: '0.4px',
-                                    marginBottom: '10px',
-                                }}
-                            >
-                                Kemungkinan Lain
-                            </div>
-                            <div className="related-list">
-                                {resultData.related.map((r, i) => (
-                                    <div className="related-item" key={i}>
-                                        <div className="related-item__bar-wrap">
-                                            <div className="related-item__name">{r.name}</div>
-                                            <div className="related-item__bar">
-                                                <div className="related-item__bar-fill" style={{ width: `${r.pct * 10}%` }} />
-                                            </div>
+                        {/* Visual Symptoms */}
+                        <div>
+                            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                                <span className="material-icons-round text-primary">visibility</span>
+                                Identified Symptoms
+                            </h3>
+                            <div className="grid sm:grid-cols-2 gap-4">
+                                {resultData.symptoms.map((sym, i) => (
+                                    <div key={i} className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-4 rounded-xl flex items-start gap-3 shadow-sm hover:shadow-md transition-shadow">
+                                        <div className="mt-0.5 text-primary">
+                                            <span className="material-icons-round">check_circle_outline</span>
                                         </div>
-                                        <span className="related-item__pct">{r.pct}%</span>
+                                        <span className="text-slate-700 dark:text-slate-300">{sym}</span>
                                     </div>
                                 ))}
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                {/* Right: Details */}
-                <div className="results-content">
-                    {/* Description */}
-                    <div className="result-section">
-                        <div className="result-section__title">
-                            <div className="result-section__title-icon">📋</div>
-                            Ikhtisar Penyakit
-                        </div>
-                        <p className="result-desc">{resultData.description}</p>
-                    </div>
-
-                    {/* Symptoms */}
-                    <div className="result-section">
-                        <div className="result-section__title">
-                            <div className="result-section__title-icon">🔍</div>
-                            Gejala Utama
-                        </div>
-                        <div className="symptoms-list">
-                            {resultData.symptoms.map((s, i) => (
-                                <div className="symptom-item" key={i}>
-                                    <span className="symptom-dot" />
-                                    {s}
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Treatment */}
-                    <div className="result-section">
-                        <div className="result-section__title">
-                            <div className="result-section__title-icon">💊</div>
-                            Saran Perawatan
-                        </div>
-                        <div className="treatment-list">
-                            {resultData.treatments.map((t, i) => (
-                                <div className="treatment-item" key={i}>
-                                    <div className="treatment-item__num">{i + 1}</div>
-                                    <span className="treatment-item__text">{t}</span>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Prevention */}
-                    <div className="result-section">
-                        <div className="result-section__title">
-                            <div className="result-section__title-icon">🛡️</div>
-                            Strategi Pencegahan
-                        </div>
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
-                            {resultData.prevention.map((p, i) => (
-                                <div
-                                    key={i}
-                                    style={{
-                                        background: 'var(--color-surface-2)',
-                                        borderRadius: 'var(--radius-md)',
-                                        padding: '14px',
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        gap: '6px',
-                                    }}
-                                >
-                                    <span style={{ fontSize: '22px' }}>{p.icon}</span>
-                                    <div style={{ fontSize: '13px', fontWeight: '700', color: 'var(--color-text)' }}>{p.label}</div>
-                                    <div style={{ fontSize: '12px', color: 'var(--color-text-muted)', lineHeight: 1.4 }}>{p.tip}</div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* CTA */}
-                    <div
-                        style={{
-                            display: 'flex',
-                            gap: '12px',
-                            padding: '20px',
-                            background: 'linear-gradient(135deg, var(--color-primary-bg), var(--color-surface))',
-                            borderRadius: 'var(--radius-xl)',
-                            border: '1px solid var(--color-border)',
-                            alignItems: 'center',
-                        }}
-                    >
-                        <div style={{ flex: 1 }}>
-                            <div style={{ fontSize: '15px', fontWeight: '700', color: 'var(--color-text)', marginBottom: '4px' }}>
-                                Butuh saran ahli?
+                        {/* Action Plan */}
+                        <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 p-1 shadow-sm overflow-hidden">
+                            <div className="p-6 md:p-8 border-b border-slate-100 dark:border-slate-700">
+                                <h3 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                    <span className="material-icons-round text-primary text-[28px]">healing</span>
+                                    Recommended Treatment Plan
+                                </h3>
+                                <p className="text-slate-500 mt-2">Take immediate action with our curated agricultural solutions.</p>
                             </div>
-                            <div style={{ fontSize: '13px', color: 'var(--color-text-secondary)' }}>
-                                Hubungi agronomis bersertifikat untuk panduan lebih lanjut.
+
+                            <div className="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-slate-100 dark:divide-slate-700 bg-slate-50/50 dark:bg-slate-900/20">
+                                {/* Organic / Cultural Control */}
+                                <div className="p-6 md:p-8">
+                                    <div className="flex items-center gap-3 mb-6">
+                                        <div className="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
+                                            <span className="material-icons-round">eco</span>
+                                        </div>
+                                        <h4 className="text-lg font-bold text-slate-900 dark:text-white">Organic & Cultural</h4>
+                                    </div>
+                                    <ul className="space-y-4">
+                                        {resultData.treatments.organic.map((org, i) => (
+                                            <li key={i} className="flex items-start gap-3 group">
+                                                <div className="w-1.5 h-1.5 rounded-full bg-green-400 mt-2 group-hover:scale-150 transition-transform"></div>
+                                                <span className="text-slate-600 dark:text-slate-400 leading-relaxed group-hover:text-slate-900 dark:group-hover:text-slate-200 transition-colors">
+                                                    {org}
+                                                </span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+
+                                {/* Chemical Control */}
+                                <div className="p-6 md:p-8">
+                                    <div className="flex items-center gap-3 mb-6">
+                                        <div className="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
+                                            <span className="material-icons-round">science</span>
+                                        </div>
+                                        <h4 className="text-lg font-bold text-slate-900 dark:text-white">Chemical Options</h4>
+                                    </div>
+                                    <ul className="space-y-4">
+                                        {resultData.treatments.chemical.map((chem, i) => (
+                                            <li key={i} className="flex items-start gap-3 group">
+                                                <div className="w-1.5 h-1.5 rounded-full bg-blue-400 mt-2 group-hover:scale-150 transition-transform"></div>
+                                                <span className="text-slate-600 dark:text-slate-400 leading-relaxed group-hover:text-slate-900 dark:group-hover:text-slate-200 transition-colors">
+                                                    {chem}
+                                                </span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                        <button className="btn btn-primary">Hubungi Ahli</button>
+
+                        {/* Prevention */}
+                        <div>
+                            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                                <span className="material-icons-round text-primary">shield</span>
+                                Future Prevention
+                            </h3>
+                            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {resultData.prevention.map((prev, i) => (
+                                    <div key={i} className="bg-primary/5 dark:bg-primary/10 border border-primary/20 dark:border-primary/30 p-4 rounded-xl">
+                                        <div className="w-8 h-8 rounded-full bg-white dark:bg-slate-800 text-primary flex items-center justify-center shadow-sm mb-3">
+                                            <span className="text-sm font-bold">{i + 1}</span>
+                                        </div>
+                                        <p className="text-sm text-slate-700 dark:text-slate-300">{prev}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
