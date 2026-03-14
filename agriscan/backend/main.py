@@ -8,7 +8,7 @@ from torchvision import transforms, models
 from PIL import Image
 import numpy as np
 
-from rembg import remove
+from rembg import remove, new_session
 
 app = FastAPI()
 
@@ -21,6 +21,7 @@ app.add_middleware(
 )
 
 MODEL = None
+REMBG_SESSION = None
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 TOMATO_CLASSES = [
@@ -62,6 +63,11 @@ async def load_model():
         
         MODEL = model
         print("SOTA Model loaded successfully (99.83% Accuracy).")
+        
+        global REMBG_SESSION
+        print("Initializing Rembg session (U2Net) to prevent timeouts...")
+        REMBG_SESSION = new_session("u2net")
+        print("Rembg session loaded successfully.")
     except Exception as e:
         print("Failed to load SOTA model:", e)
 
@@ -184,7 +190,7 @@ async def predict(file: UploadFile = File(...)):
         
         # --- BACKGROUND REMOVAL ---
         print("Removing background for focus analysis...")
-        bg_removed = remove(original_image)
+        bg_removed = remove(original_image, session=REMBG_SESSION)
         
         # --- VALIDASI OBJEK DAUN ---
         is_leaf, leaf_msg = is_valid_leaf(bg_removed)
