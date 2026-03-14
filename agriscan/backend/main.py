@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 import io
@@ -45,8 +46,16 @@ async def load_model():
         num_ftrs = model.classifier[1].in_features
         model.classifier[1] = nn.Linear(num_ftrs, len(TOMATO_CLASSES))
         
-        # Load Weights
-        weight_path = r"C:\Users\Administrator\OneDrive\Documents\coding\web_dev\WebDev\model\SOTA_Tomato_EfficientNet.pth"
+        # Load Weights (Production Ready: relative path)
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        
+        # Railway will have it in /app/backend/model/...
+        weight_path = os.path.join(current_dir, "model", "SOTA_Tomato_EfficientNet.pth")
+        
+        if not os.path.exists(weight_path):
+            # Fallback for local development
+            weight_path = r"c:\Users\slarkboy\Semester 6\Web-Development\WebDev\model\SOTA_Tomato_EfficientNet.pth"
+
         model.load_state_dict(torch.load(weight_path, map_location=DEVICE))
         model.to(DEVICE)
         model.eval()
