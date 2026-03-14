@@ -24,9 +24,9 @@ const DISEASE_DATABASE = {
             { icon: '🌱', label: 'Benih Unggul', tip: 'Gunakan benih bersertifikat bebas bakteri' }
         ],
         tags: [
-            { label: 'Bacterial Disease', type: 'error' },
-            { label: 'Act Quickly', type: 'warning' },
-            { label: 'Treatable', type: 'primary' }
+            { label: 'Penyakit Bakteri', type: 'error' },
+            { label: 'Tindak Cepat', type: 'warning' },
+            { label: 'Dapat Diobati', type: 'primary' }
         ]
     },
     'Early blight': {
@@ -51,9 +51,9 @@ const DISEASE_DATABASE = {
             { icon: '🩹', label: 'Mulsa Tanah', tip: 'Cegah spora naik saat disiram' }
         ],
         tags: [
-            { label: 'Fungal Disease', type: 'error' },
-            { label: 'Act Quickly', type: 'warning' },
-            { label: 'Treatable', type: 'primary' }
+            { label: 'Penyakit Jamur', type: 'error' },
+            { label: 'Tindak Cepat', type: 'warning' },
+            { label: 'Dapat Diobati', type: 'primary' }
         ]
     },
     'Late blight': {
@@ -78,9 +78,9 @@ const DISEASE_DATABASE = {
             { icon: '🛡️', label: 'Proteksi Preventif', tip: 'Semprot fungisida sebelum musim hujan' }
         ],
         tags: [
-            { label: 'Fungal Disease', type: 'error' },
-            { label: 'Highly Dangerous', type: 'warning' },
-            { label: 'Urgent Care', type: 'primary' }
+            { label: 'Penyakit Jamur', type: 'error' },
+            { label: 'Sangat Berbahaya', type: 'warning' },
+            { label: 'Tindakan Darurat', type: 'primary' }
         ]
     },
     'Leaf Mold': {
@@ -105,9 +105,9 @@ const DISEASE_DATABASE = {
             { icon: '🌡️', label: 'Kontrol Kelembaban', tip: 'Usahakan RH di bawah 85%' }
         ],
         tags: [
-            { label: 'Fungal Disease', type: 'error' },
-            { label: 'High Humidity', type: 'warning' },
-            { label: 'Preventable', type: 'primary' }
+            { label: 'Penyakit Jamur', type: 'error' },
+            { label: 'Kelembaban Tinggi', type: 'warning' },
+            { label: 'Dapat Dicegah', type: 'primary' }
         ]
     },
     'Septoria leaf spot': {
@@ -132,9 +132,9 @@ const DISEASE_DATABASE = {
             { icon: '💧', label: 'Aliran Air', tip: 'Perbaiki drainase agar tidak menggenang' }
         ],
         tags: [
-            { label: 'Fungal Disease', type: 'error' },
-            { label: 'Leaf Issue', type: 'warning' },
-            { label: 'Treatable', type: 'primary' }
+            { label: 'Penyakit Jamur', type: 'error' },
+            { label: 'Masalah Daun', type: 'warning' },
+            { label: 'Dapat Diobati', type: 'primary' }
         ]
     },
     'Spider mites Two-spotted_spider_mite': {
@@ -159,9 +159,9 @@ const DISEASE_DATABASE = {
             { icon: '🔍', label: 'Cek Rutin', tip: 'Amati bagian bawah daun tiap pagi' }
         ],
         tags: [
-            { label: 'Plant Pest', type: 'error' },
-            { label: 'Dry Weather', type: 'warning' },
-            { label: 'Eradicable', type: 'primary' }
+            { label: 'Hama Tanaman', type: 'error' },
+            { label: 'Cuaca Kering', type: 'warning' },
+            { label: 'Dapat Dibasmi', type: 'primary' }
         ]
     },
     'Target Spot': {
@@ -186,9 +186,9 @@ const DISEASE_DATABASE = {
             { icon: '🔄', label: 'Pola Tanam', tip: 'Hindari inang bersilangan' }
         ],
         tags: [
-            { label: 'Fungal Disease', type: 'error' },
-            { label: 'Blight-like', type: 'warning' },
-            { label: 'Treatable', type: 'primary' }
+            { label: 'Penyakit Jamur', type: 'error' },
+            { label: 'Mirip Hawar', type: 'warning' },
+            { label: 'Dapat Diobati', type: 'primary' }
         ]
     },
     'Tomato Yellow Leaf Curl Virus': {
@@ -213,9 +213,9 @@ const DISEASE_DATABASE = {
             { icon: '🚫', label: 'Bibit Sehat', tip: 'Pastikan bibit bebas virus sejak semai' }
         ],
         tags: [
-            { label: 'Viral Infection', type: 'error' },
-            { label: 'Whitefly Vektor', type: 'warning' },
-            { label: 'No Remedy', type: 'primary' }
+            { label: 'Infeksi Virus', type: 'error' },
+            { label: 'Vektor Kutu Kebul', type: 'warning' },
+            { label: 'Tanpa Obat', type: 'primary' }
         ]
     },
     'Tomato mosaic virus': {
@@ -240,9 +240,9 @@ const DISEASE_DATABASE = {
             { icon: '🚫', label: 'Interaksi Terbatas', tip: 'Kurangi kontak fisik antar tanaman' }
         ],
         tags: [
-            { label: 'Viral Infection', type: 'error' },
-            { label: 'Highly Stable', type: 'warning' },
-            { label: 'Strict Protocol', type: 'primary' }
+            { label: 'Infeksi Virus', type: 'error' },
+            { label: 'Sangat Menular', type: 'warning' },
+            { label: 'Protokol Ketat', type: 'primary' }
         ]
     },
     'healthy': {
@@ -267,8 +267,8 @@ const DISEASE_DATABASE = {
             { icon: '☀️', label: 'Cahaya Cukup', tip: 'Pastikan sinar matahari minimal 6 jam' }
         ],
         tags: [
-            { label: 'Healthy Plant', type: 'primary' },
-            { label: 'Good Vigor', type: 'warning' },
+            { label: 'Tanaman Sehat', type: 'primary' },
+            { label: 'Vigor Baik', type: 'warning' },
             { label: 'Optimal', type: 'primary' }
         ]
     }
@@ -301,17 +301,20 @@ export default function ResultsPage({ onNavigate, previewUrl, scanResult }) {
         related: scanResult?.related || []
     };
 
-    const isLowConfidence = rawName === "Hasil Kurang Meyakinkan";
+    const isLowConfidence = rawName === "Hasil Kurang Meyakinkan" || rawName === "Bukan Daun Tomat";
+    const isInvalidLeaf = rawName === "Bukan Daun Tomat";
 
     if (isLowConfidence) {
-        resultData.description = scanResult.note || "AI kami ragu dengan gambar ini. Hal ini biasanya terjadi karena cahaya redup, kamera goyang, atau jarak daun terlalu jauh.";
-        resultData.severity = "Tidak Pasti";
-        resultData.severityClass = "severity-warning";
-        resultData.symptoms = ["Gangguan visual terdeteksi", "Fitur kurang jelas"];
-        resultData.treatments = ["Foto ulang dengan cahaya lebih terang", "Dekatkan kamera ke permukaan daun"];
+        resultData.name = isInvalidLeaf ? "Foto Tidak Dikenal" : "Hasil Kurang Meyakinkan";
+        resultData.sciName = isInvalidLeaf ? "Invalid Object" : "Low Confidence";
+        resultData.description = scanResult.note || (isInvalidLeaf ? "Sistem tidak mendeteksi adanya objek daun pada gambar ini. Pastikan Anda memfoto daun tanaman tomat." : "AI kami ragu dengan gambar ini. Hal ini biasanya terjadi karena cahaya redup, kamera goyang, atau jarak daun terlalu jauh.");
+        resultData.severity = "Tindak Lanjut Diperlukan";
+        resultData.severityClass = isInvalidLeaf ? "severity-high" : "severity-warning"; // warning color instead of red
+        resultData.symptoms = isInvalidLeaf ? ["Bukan objek daun tomat", "Deteksi warna tidak cocok", "Fokus tidak tepat"] : ["Gangguan visual terdeteksi", "Fitur kurang jelas"];
+        resultData.treatments = isInvalidLeaf ? ["Fokuskan kamera langsung pada daun tomat", "Pastikan tidak ada objek mencolok lain selain daun", "Hindari pengambilan dari jarak yang terlalu jauh"] : ["Foto ulang dengan cahaya lebih terang", "Dekatkan kamera ke permukaan daun"];
         resultData.tags = [
-            { label: 'Uncertain', type: 'warning' },
-            { label: 'Re-scan', type: 'primary' }
+            { label: isInvalidLeaf ? 'Tidak Fokus' : 'Tidak Pasti', type: 'error' },
+            { label: 'Pindai Ulang', type: 'primary' }
         ];
     }
 
@@ -350,15 +353,17 @@ export default function ResultsPage({ onNavigate, previewUrl, scanResult }) {
 
             <div className="results-grid">
                 {isLowConfidence && (
-                    <div className="confidence-warning-banner">
-                        <div className="confidence-warning-banner__icon">⚠️</div>
+                    <div className="confidence-warning-banner" style={isInvalidLeaf ? { borderLeftColor: 'var(--color-error)' } : {}}>
+                        <div className="confidence-warning-banner__icon">{isInvalidLeaf ? '🚫' : '⚠️'}</div>
                         <div className="confidence-warning-banner__content">
-                            <div className="confidence-warning-banner__title">Hasil Kurang Meyakinkan</div>
+                            <div className="confidence-warning-banner__title" style={isInvalidLeaf ? { color: 'var(--color-error)' } : {}}>
+                                {resultData.name}
+                            </div>
                             <div className="confidence-warning-banner__text">
-                                AI kami kesulitan menganalisis foto ini. {resultData.description}
+                                {isInvalidLeaf ? resultData.description : `AI kami kesulitan menganalisis foto ini. ${resultData.description}`}
                             </div>
                         </div>
-                        <button className="btn btn-primary btn-sm" onClick={() => onNavigate('scan')}>Ambil Ulang</button>
+                        <button className={`btn ${isInvalidLeaf ? 'btn-danger' : 'btn-primary'} btn-sm`} onClick={() => onNavigate('scan')}>Ambil Ulang</button>
                     </div>
                 )}
                 {/* Left: Disease Card */}
@@ -398,32 +403,34 @@ export default function ResultsPage({ onNavigate, previewUrl, scanResult }) {
                         </div>
 
                         {/* Other detections */}
-                        <div style={{ marginTop: '18px' }}>
-                            <div
-                                style={{
-                                    fontSize: '12px',
-                                    fontWeight: '700',
-                                    color: 'var(--color-text-muted)',
-                                    textTransform: 'uppercase',
-                                    letterSpacing: '0.4px',
-                                    marginBottom: '10px',
-                                }}
-                            >
-                                Kemungkinan Lain
-                            </div>
-                            <div className="related-list">
-                                {resultData.related.map((r, i) => (
-                                    <div className="related-item" key={i}>
-                                        <div className="related-item__name">{r.name}</div>
-                                        <div className="related-item__bar-wrap" style={{ width: '60px' }}>
-                                            <div className="related-item__bar">
-                                                <div className="related-item__bar-fill" style={{ width: `${r.pct * 10}%` }} />
+                        {!isLowConfidence && resultData.related && resultData.related.length > 0 && (
+                            <div style={{ marginTop: '18px' }}>
+                                <div
+                                    style={{
+                                        fontSize: '12px',
+                                        fontWeight: '700',
+                                        color: 'var(--color-text-muted)',
+                                        textTransform: 'uppercase',
+                                        letterSpacing: '0.4px',
+                                        marginBottom: '10px',
+                                    }}
+                                >
+                                    Kemungkinan Lain
+                                </div>
+                                <div className="related-list">
+                                    {resultData.related.map((r, i) => (
+                                        <div className="related-item" key={i}>
+                                            <div className="related-item__name">{r.name}</div>
+                                            <div className="related-item__bar-wrap" style={{ width: '60px' }}>
+                                                <div className="related-item__bar">
+                                                    <div className="related-item__bar-fill" style={{ width: `${r.pct * 10}%` }} />
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    ))}
+                                </div>
                             </div>
-                        </div>
+                        )}
                     </div>
                 </div>
 
