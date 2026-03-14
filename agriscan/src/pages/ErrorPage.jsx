@@ -2,16 +2,16 @@ import { ArrowLeftIcon, RefreshIcon, UploadIcon } from '../icons.jsx';
 
 const TIPS = {
     no_tomato: [
-        { icon: '🍅', text: 'Ensure the image clearly shows tomato plant leaves, fruit, or stem' },
-        { icon: '🔍', text: 'Avoid images with multiple plant types in frame' },
-        { icon: '📐', text: 'Center the tomato plant in your photo' },
-        { icon: '💡', text: 'Good lighting helps the AI identify the plant correctly' },
+        { icon: '🍅', text: 'Pastikan gambar menunjukkan daun dengan jelas' },
+        { icon: '🔍', text: 'Hindari gambar dengan banyak jenis tanaman dalam satu bingkai' },
+        { icon: '📐', text: 'Posisikan tanaman tomat di tengah foto' },
+        { icon: '💡', text: 'Pencahayaan yang baik membantu AI mengidentifikasi tanaman' },
     ],
     blurry: [
-        { icon: '🔍', text: 'Hold the camera steady — use a tripod or rest against a surface' },
-        { icon: '☀️', text: 'Ensure adequate lighting so the camera can focus' },
-        { icon: '📏', text: 'Keep 15–30cm distance from the leaf for best focus' },
-        { icon: '⏱️', text: 'Wait for the camera to autofocus before capturing' },
+        { icon: '🔍', text: 'Pegang kamera dengan stabil atau sandarkan ke permukaan' },
+        { icon: '☀️', text: 'Pastikan cahaya cukup agar kamera dapat fokus' },
+        { icon: '📐', text: 'Jaga jarak 15–30cm dari daun untuk fokus terbaik' },
+        { icon: '⏱️', text: 'Tunggu kamera fokus otomatis sebelum memotret' },
     ],
 };
 
@@ -21,20 +21,20 @@ export default function ErrorPage({ onNavigate, errorType = 'no_tomato', preview
     const config = {
         no_tomato: {
             badgeIcon: '🔍',
-            badgeTitle: 'No Tomato Detected',
-            badgeSubtitle: 'Unable to identify tomato plant',
-            bodyTitle: 'No Tomato Plant Found in Image',
+            badgeTitle: 'Tomat Tidak Terdeteksi',
+            badgeSubtitle: 'Gagal mengidentifikasi tanaman tomat',
+            bodyTitle: 'Tanaman Tomat Tidak Ditemukan',
             bodyDesc:
-                "Our AI couldn't detect any tomato plant tissue in the uploaded image. This may be because the image doesn't contain a tomato plant, the plant is not clearly visible, or the resolution is too low for accurate detection.",
-            tipsTitle: 'How to get better results',
+                "AI kami tidak dapat mendeteksi jaringan tanaman tomat pada gambar yang anda unggah. Hal ini mungkin karena gambar tidak berisi tanaman tomat, tanaman tidak terlihat jelas, atau resolusi gambar terlalu rendah.",
+            tipsTitle: 'Cara mendapatkan hasil lebih baik',
         },
         blurry: {
             badgeIcon: '⚠️',
-            badgeTitle: 'Image Quality Issue',
-            badgeSubtitle: 'Photo is too blurry for analysis',
-            bodyTitle: 'Image Too Blurry to Analyze',
+            badgeTitle: 'Masalah Kualitas Gambar',
+            badgeSubtitle: 'Foto terlalu buram untuk dianalisis',
+            bodyTitle: 'Gambar Terlalu Buram untuk Dianalisis',
             bodyDesc:
-                "The uploaded image doesn't have sufficient sharpness for our AI to perform accurate disease detection. Blurry images cause false positives and unreliable results, so we require clear, focused photographs.",
+                "Gambar yang anda unggah tidak memiliki ketajaman yang cukup bagi AI kami untuk melakukan deteksi penyakit secara akurat. Gambar yang buram dapat menyebabkan hasil yang salah, jadi kami memerlukan foto yang fokus dan jelas.",
         },
     };
 
@@ -54,10 +54,10 @@ export default function ErrorPage({ onNavigate, errorType = 'no_tomato', preview
                     </button>
                     <div>
                         <h1 style={{ fontSize: '20px', fontWeight: '700', color: 'var(--color-text)' }}>
-                            Analysis Failed
+                            Analisis Gagal
                         </h1>
                         <p style={{ fontSize: '13px', color: 'var(--color-text-muted)', marginTop: '3px' }}>
-                            We encountered an issue with your image
+                            Kami menemukan kendala pada gambar anda
                         </p>
                     </div>
                 </div>
@@ -107,7 +107,7 @@ export default function ErrorPage({ onNavigate, errorType = 'no_tomato', preview
                             <p className="error-body__desc">{c.bodyDesc}</p>
 
                             <div style={{ fontSize: '13px', fontWeight: '700', color: 'var(--color-text-secondary)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.4px' }}>
-                                Tips for better photos
+                                Tips agar foto lebih baik
                             </div>
                             <div className="tips-list">
                                 {tips.map((tip, i) => (
@@ -128,7 +128,7 @@ export default function ErrorPage({ onNavigate, errorType = 'no_tomato', preview
                             onClick={() => onNavigate('scan')}
                         >
                             <UploadIcon size={17} color="white" />
-                            Try Again with New Photo
+                            Coba Lagi dengan Foto Baru
                         </button>
                         <button
                             className="btn btn-outline btn-lg"
@@ -136,7 +136,7 @@ export default function ErrorPage({ onNavigate, errorType = 'no_tomato', preview
                             onClick={() => onNavigate('home')}
                         >
                             <RefreshIcon size={16} />
-                            Back to Home
+                            Kembali ke Beranda
                         </button>
                     </div>
 
@@ -149,13 +149,13 @@ export default function ErrorPage({ onNavigate, errorType = 'no_tomato', preview
                             padding: '0 20px',
                         }}
                     >
-                        Still having trouble?{' '}
+                        Masih ada kendala?{' '}
                         <a href="#" style={{ color: 'var(--color-primary)', fontWeight: '600' }}>
-                            View photo guidelines
+                            Lihat panduan foto
                         </a>{' '}
-                        or{' '}
+                        atau{' '}
                         <a href="#" style={{ color: 'var(--color-primary)', fontWeight: '600' }}>
-                            contact support
+                            hubungi bantuan
                         </a>
                     </div>
                 </div>

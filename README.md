@@ -33,7 +33,8 @@ Dibangun menggunakan teknologi modern seperti **React**, **Vite**, dan **JavaScr
 | 🌿 **32+ Penyakit** | Mencakup *early blight*, *bacterial spot*, dan penyakit lainnya |
 | 💊 **Rencana Perawatan** | Setiap diagnosis dilengkapi protokol perawatan dari para ahli |
 | 📊 **Confidence Score** | Tingkat keyakinan AI ditampilkan secara detail |
-| 🔒 **Privacy First** | Gambar tidak disimpan — data pertanian Anda sepenuhnya aman |
+| � **Analisis Keparahan** | Menghitung persentase area daun terinfeksi dengan analisis piksel |
+| �🔒 **Privacy First** | Gambar tidak disimpan — data pertanian Anda sepenuhnya aman |
 
 #### 📱 Halaman Aplikasi
 
@@ -97,15 +98,9 @@ Buka **[http://localhost:5173](http://localhost:5173)** di browser. 🎉
 | [Vite 7](https://vitejs.dev/) | Build tool & dev server |
 | JavaScript (ESM) | Bahasa pemrograman |
 | Vanilla CSS | Styling & design system |
-| [Space Grotesk](https://fonts.google.com/specimen/Space+Grotesk) | Tipografi |
 
 ---
 
-## 📄 Lisensi
-
-Repositori ini dibuat untuk keperluan akademis — **Semester 6, Mata Kuliah Web Development**.
-
----
 
 <div align="center">
 

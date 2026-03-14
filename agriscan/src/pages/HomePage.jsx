@@ -2,44 +2,45 @@ import { useState, useRef } from 'react';
 import { UploadIcon, CameraIcon, ZapIcon, ShieldIcon, CheckCircleIcon, ImageIcon } from '../icons.jsx';
 
 const FEATURES = [
-    { icon: <ZapIcon size={14} color="var(--color-primary)" />, text: 'Results in under 3 seconds' },
-    { icon: <ShieldIcon size={14} color="var(--color-primary)" />, text: '98.4% detection accuracy' },
-    { icon: <CheckCircleIcon size={14} color="var(--color-primary)" />, text: '32+ diseases identified' },
+    { icon: <ZapIcon size={14} color="var(--color-primary)" />, text: 'Hasil dalam < 3 detik' },
+    { icon: <ShieldIcon size={14} color="var(--color-primary)" />, text: 'Akurasi SOTA 99.7%' },
+    { icon: <CheckCircleIcon size={14} color="var(--color-primary)" />, text: 'Analisis Terakselerasi GPU' },
 ];
 
 const STEPS = [
     {
         num: '01',
         icon: '📷',
-        title: 'Upload a Photo',
-        desc: 'Take a clear photo of your tomato plant leaves, fruits, or stem showing the affected area.',
+        title: 'Ambil Foto',
+        desc: 'Ambil foto daun yang terkena penyakit secara jelas.',
     },
     {
         num: '02',
         icon: '🤖',
-        title: 'AI Analysis',
-        desc: 'Our deep learning model analyzes your image against a database of 32+ tomato diseases.',
+        title: 'Analisis AI',
+        desc: 'Model deep learning kami menganalisis gambar Anda secara instan tanpa menyimpan data.',
     },
     {
         num: '03',
         icon: '💊',
-        title: 'Get Treatment',
-        desc: 'Receive instant diagnosis with expert-recommended treatment plans and prevention tips.',
+        title: 'Dapatkan Solusi',
+        desc: 'Terima hasil diagnosa instan beserta saran perawatan dan pencegahan dari ahli.',
     },
 ];
 
 const FEAT_CARDS = [
-    { icon: '🎯', title: 'High Accuracy', desc: 'Trained on 500K+ labeled images for industry-leading 98.4% accuracy across all disease types.' },
-    { icon: '⚡', title: 'Instant Results', desc: 'Real-time analysis delivers diagnosis in under 3 seconds, so you can act before damage spreads.' },
-    { icon: '🌿', title: '32+ Diseases', desc: 'From early blight to bacterial spot, we cover the full spectrum of tomato plant diseases.' },
-    { icon: '💊', title: 'Treatment Plans', desc: 'Each diagnosis comes with expert-curated treatment protocols and organic alternatives.' },
-    { icon: '📊', title: 'Confidence Score', desc: 'Understand how certain the AI is with detailed confidence breakdowns for every result.' },
-    { icon: '🔒', title: 'Privacy First', desc: 'Images are never stored. Your farm data stays completely private and secure.' },
+    { icon: '🎯', title: 'Diagnosis Tepat Sasaran', desc: 'Dapatkan hasil identifikasi penyakit yang akurat untuk mencegah gagal panen lebih dini.' },
+    { icon: '🌿', title: 'Andal di Segala Kondisi', desc: 'Sistem tetap bekerja maksimal meskipun foto diambil dengan cahaya redup atau sedikit buram.' },
+    { icon: '💊', title: 'Panduan Praktis', desc: 'Tidak hanya mendeteksi masalah, kami juga memberikan langkah perawatan spesifik untuk menyelamatkan tanaman Anda.' },
+    { icon: '📊', title: 'Hasil yang Bisa Dipercaya', desc: 'Memberikan informasi yang jujur dan valid, sehingga Anda bisa mengambil tindakan dengan tenang.' },
+    { icon: '🔒', title: 'Aman dan Rahasia', desc: 'Foto tanaman Anda langsung diproses tanpa disimpan di sistem kami, menjaga privasi data kebun Anda.' },
+    { icon: '⚡', title: 'Respon Super Cepat', desc: 'Dapatkan hasil analisis penyakit dan solusi perawatannya dalam hitungan detik tanpa perlu menunggu lama.' },
 ];
 
 export default function HomePage({ onNavigate, onFileSelected }) {
     const [dragover, setDragover] = useState(false);
     const fileRef = useRef();
+    const cameraRef = useRef();
 
     const handleDrop = (e) => {
         e.preventDefault();
@@ -67,15 +68,15 @@ export default function HomePage({ onNavigate, onFileSelected }) {
                 <div className="hero__content">
                     <div className="hero__badge">
                         <span className="hero__badge-dot" />
-                        AI-Powered Plant Health
+                        Kesehatan Tanaman Berbasis AI
                     </div>
                     <h1 className="hero__title">
-                        Detect Tomato<br />
-                        Diseases <span className="hero__title-accent">Instantly</span>
+                        Deteksi Penyakit<br />
+                        Tomat <span className="hero__title-accent">Instan</span>
                     </h1>
                     <p className="hero__subtitle">
-                        Upload a photo of your tomato plant and our AI will identify diseases,
-                        analyze severity, and provide targeted treatment recommendations in seconds.
+                        Ambil foto tanaman tomat Anda dan AI kami akan mengidentifikasi penyakit,
+                        menganalisis keparahan, dan memberikan solusi perawatan dalam sekejap.
                     </p>
                     <div className="hero__actions">
                         <button
@@ -84,27 +85,24 @@ export default function HomePage({ onNavigate, onFileSelected }) {
                             onClick={() => onNavigate('scan')}
                         >
                             <UploadIcon size={18} color="white" />
-                            Scan Your Plant
-                        </button>
-                        <button className="btn btn-outline btn-lg">
-                            View Demo
+                            Pindai Tanaman Anda
                         </button>
                     </div>
 
                     <div className="hero__stats">
                         <div className="hero__stat">
-                            <div className="hero__stat-value">98.4%</div>
-                            <div className="hero__stat-label">Accuracy rate</div>
+                            <div className="hero__stat-value">99.7%</div>
+                            <div className="hero__stat-label">Akurasi SOTA</div>
                         </div>
                         <div className="hero__stat-divider" />
                         <div className="hero__stat">
-                            <div className="hero__stat-value">32+</div>
-                            <div className="hero__stat-label">Diseases detected</div>
+                            <div className="hero__stat-value">Instan</div>
+                            <div className="hero__stat-label">Tanpa Database</div>
                         </div>
                         <div className="hero__stat-divider" />
                         <div className="hero__stat">
-                            <div className="hero__stat-value">&lt;3s</div>
-                            <div className="hero__stat-label">Analysis time</div>
+                            <div className="hero__stat-value">&lt;3 dtk</div>
+                            <div className="hero__stat-label">Waktu Deteksi</div>
                         </div>
                     </div>
                 </div>
@@ -112,8 +110,8 @@ export default function HomePage({ onNavigate, onFileSelected }) {
                 {/* Upload Panel */}
                 <div className="upload-panel">
                     <div className="upload-panel__header">
-                        <span className="upload-panel__title">Quick Scan</span>
-                        <span className="upload-panel__tag">Free</span>
+                        <span className="upload-panel__title">Pindai Cepat</span>
+                        <span className="upload-panel__tag">Gratis</span>
                     </div>
 
                     <div
@@ -131,19 +129,26 @@ export default function HomePage({ onNavigate, onFileSelected }) {
                             style={{ display: 'none' }}
                             onChange={handleFileChange}
                         />
+                        <input
+                            ref={cameraRef}
+                            type="file"
+                            accept="image/*"
+                            capture="environment"
+                            style={{ display: 'none' }}
+                            onChange={handleFileChange}
+                        />
                         <div className="dropzone__icon">
                             <UploadIcon size={24} color="var(--color-primary)" />
                         </div>
-                        <div className="dropzone__title">Drop your image here</div>
+                        <div className="dropzone__title">Lepas gambar di sini</div>
                         <p className="dropzone__subtitle">
-                            or <span className="dropzone__browse">browse files</span> to upload
+                            atau <span className="dropzone__browse">pilih file</span> untuk memulai
                         </p>
                         <div className="dropzone__formats">
                             <span className="dropzone__format-tag">JPG</span>
                             <span className="dropzone__format-tag">PNG</span>
                             <span className="dropzone__format-tag">WEBP</span>
-                            <span className="dropzone__format-tag">HEIC</span>
-                            <span style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>up to 10MB</span>
+                            <span style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>Maks 10MB</span>
                         </div>
                     </div>
 
@@ -163,11 +168,15 @@ export default function HomePage({ onNavigate, onFileSelected }) {
                             onClick={() => fileRef.current?.click()}
                         >
                             <UploadIcon size={15} color="white" />
-                            Upload Image
+                            Ambil Gambar
                         </button>
-                        <button className="btn btn-outline" style={{ flex: 1 }}>
+                        <button
+                            className="btn btn-outline"
+                            style={{ flex: 1 }}
+                            onClick={() => cameraRef.current?.click()}
+                        >
                             <CameraIcon size={15} color="currentColor" />
-                            Use Camera
+                            Gunakan Kamera
                         </button>
                     </div>
                 </div>
@@ -177,10 +186,10 @@ export default function HomePage({ onNavigate, onFileSelected }) {
             <section style={{ background: 'var(--color-surface)', borderTop: '1px solid var(--color-border)', borderBottom: '1px solid var(--color-border)', padding: '64px 0' }}>
                 <div className="section" style={{ padding: '0 40px' }}>
                     <div className="section__header">
-                        <span className="section__eyebrow">How It Works</span>
-                        <h2 className="section__title">Three simple steps to plant health</h2>
+                        <span className="section__eyebrow">Cara Kerja</span>
+                        <h2 className="section__title">Tiga langkah mudah menuju panen sehat</h2>
                         <p className="section__subtitle">
-                            No expertise needed. Our AI does the heavy lifting so you can focus on what matters — your crops.
+                            anda tidak perlu jadi ahli botani. AI kami merangkum semuanya agar anda bisa fokus pada hasil panen.
                         </p>
                     </div>
                     <div className="steps-grid">
@@ -200,10 +209,10 @@ export default function HomePage({ onNavigate, onFileSelected }) {
             <section>
                 <div className="section">
                     <div className="section__header">
-                        <span className="section__eyebrow">Features</span>
-                        <h2 className="section__title">Everything you need</h2>
+                        <span className="section__eyebrow">Fitur Utama</span>
+                        <h2 className="section__title">Semua yang anda butuhkan</h2>
                         <p className="section__subtitle">
-                            Professional-grade plant diagnostics, powered by cutting-edge computer vision.
+                            Diagnostik tanaman tingkat profesional, ditenagai oleh computer vision tercanggih.
                         </p>
                     </div>
                     <div className="features-grid">
@@ -221,11 +230,11 @@ export default function HomePage({ onNavigate, onFileSelected }) {
             {/* Footer */}
             <footer className="footer" style={{ marginTop: 'auto' }}>
                 <div className="footer__inner">
-                    <span className="footer__copy">© 2026 AgriScan AI. All rights reserved.</span>
+                    <span className="footer__copy">© 2026 AgriScan AI Indonesia. Seluruh hak cipta dilindungi.</span>
                     <div className="footer__links">
-                        <a href="#" className="footer__link">Privacy</a>
-                        <a href="#" className="footer__link">Terms</a>
-                        <a href="#" className="footer__link">Contact</a>
+                        <a href="#" className="footer__link">Privasi</a>
+                        <a href="#" className="footer__link">Ketentuan</a>
+                        <a href="#" className="footer__link">Kontak</a>
                     </div>
                 </div>
             </footer>

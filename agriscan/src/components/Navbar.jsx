@@ -20,26 +20,23 @@ export default function Navbar({ onNavigate, activePage }) {
                         className={`navbar__nav-item ${activePage === 'home' ? 'active' : ''}`}
                         onClick={() => onNavigate('home')}
                     >
-                        Home
+                        Beranda
                     </button>
                     <button
                         className={`navbar__nav-item ${activePage === 'scan' ? 'active' : ''}`}
                         onClick={() => onNavigate('scan')}
                     >
-                        Scan
+                        Pindai
                     </button>
-                    <button className="navbar__nav-item">Database</button>
-                    <button className="navbar__nav-item">About</button>
                 </div>
 
                 {/* CTA */}
                 <div className="navbar__cta">
-                    <button className="btn btn-outline">Sign In</button>
                     <button
                         className="btn btn-primary"
                         onClick={() => onNavigate('scan')}
                     >
-                        Try Free
+                        Coba Gratis
                     </button>
                 </div>
             </div>
