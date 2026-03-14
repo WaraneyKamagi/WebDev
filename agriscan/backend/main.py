@@ -5,6 +5,7 @@ import torch
 import torch.nn as nn
 from torchvision import transforms, models
 from PIL import Image
+import numpy as np
 
 from rembg import remove
 
@@ -63,6 +64,48 @@ def transform_image(image):
     ])
     return transform(image).unsqueeze(0).to(DEVICE)
 
+def calculate_pixel_severity(bg_removed_image):
+    """
+    Menghitung persentase area yang rusak dibandingkan total area daun.
+    Menggunakan space warna HSV untuk segmentasi.
+    """
+    # Pastikan dalam mode RGBA untuk akses alpha channel (mask daun)
+    if bg_removed_image.mode != 'RGBA':
+        return 0, 0
+    
+    # Konversi ke numpy array
+    img_array = np.array(bg_removed_image)
+    
+    # Mask untuk area daun (alpha > 0)
+    leaf_mask = img_array[:, :, 3] > 0
+    total_leaf_pixels = np.sum(leaf_mask)
+    
+    if total_leaf_pixels == 0:
+        return 0, 0
+
+    # Konversi RGB ke HSV untuk deteksi warna yang lebih stabil
+    # PIL HSV: H(0-255), S(0-255), V(0-255)
+    hsv_image = bg_removed_image.convert('HSV')
+    hsv_array = np.array(hsv_image)
+    
+    h = hsv_array[:, :, 0]
+    s = hsv_array[:, :, 1]
+    v = hsv_array[:, :, 2]
+    
+    # Rentang warna "Sehat" (Hijau): Hue approx 40-100 (dalam skala 0-255)
+    # Rentang warna "Rusak" (Cokelat/Kuning/Bercak): Hue 0-35 atau yang memiliki saturasi/value rendah
+    
+    # Masking Hijau
+    healthy_mask = (h >= 40) & (h <= 100) & (s > 20) & leaf_mask
+    
+    # Masking Rusak: Area daun yang TIDAK sehat
+    damaged_mask = leaf_mask & ~healthy_mask
+    
+    damaged_pixels = np.sum(damaged_mask)
+    severity_pct = (damaged_pixels / total_leaf_pixels) * 100
+    
+    return round(severity_pct, 2), total_leaf_pixels
+
 @app.get("/")
 def read_root():
     return {"message": "Agriscan SOTA EfficientNet-B1 API is running"}
@@ -116,8 +159,12 @@ async def predict(file: UploadFile = File(...)):
         
         print(f"Prediction Mode: {mode} | Confidence: {confidence}%")
 
+        # 5. PIXEL BASED SEVERITY ANALYSIS
+        severity_pct, leaf_area = calculate_pixel_severity(bg_removed)
+        print(f"Visual Damage Analysis: {severity_pct}% of leaf area damaged.")
+
         # --- BENTENG KEAMANAN (GUARDRAIL) ---
-        if confidence < 85.0:
+        if confidence < 80.0: # Sedikit lebih toleran karena kita punya pixel analysis sekarang
             return {
                 "success": True,
                 "data": {
@@ -126,8 +173,9 @@ async def predict(file: UploadFile = File(...)):
                     "confidence": confidence,
                     "severity": "Unknown",
                     "severityClass": "severity-none",
+                    "damage_pct": severity_pct,
                     "related": [],
-                    "note": "Mohon ambil foto lebih dekat dengan pencahayaan yang lebih terang untuk hasil yang lebih akurat."
+                    "note": "Mohon ambil foto lebih dekat dengan pencahayaan yang lebih terang."
                 }
             }
 
@@ -140,15 +188,19 @@ async def predict(file: UploadFile = File(...)):
             severity_class = "severity-none"
             condition_msg = "Tanaman Bapak terlihat sehat dan segar. Pertahankan perawatan rutin."
         else:
-            severity = "High" if confidence > 92 else "Medium"
-            severity_class = "severity-high" if confidence > 92 else "severity-medium"
-            
-            if confidence > 96:
-                condition_msg = f"Gejala {disease_name} terlihat sangat jelas dan meluas. Diperlukan tindakan segera."
-            elif confidence > 90:
-                condition_msg = f"Terdeteksi indikasi kuat {disease_name}. Sebaiknya segera lakukan penanganan untuk mencegah penyebaran."
+            # INTEGRASI PIXEL ANALYSIS KE SEVERITY
+            if severity_pct > 35 or confidence > 97:
+                severity = "High"
+                severity_class = "severity-high"
+                condition_msg = f"Gejala {disease_name} sudah parah ({severity_pct}% area terdampak). Segera lakukan penanganan."
+            elif severity_pct > 15 or confidence > 90:
+                severity = "Medium"
+                severity_class = "severity-medium"
+                condition_msg = f"Terdeteksi indikasi sedang {disease_name}. {severity_pct}% daun mulai menunjukkan bercak."
             else:
-                condition_msg = f"Ada tanda-tanda awal {disease_name}. Pantau perkembangan dan bersihkan area terdampak secepatnya."
+                severity = "Low"
+                severity_class = "severity-low"
+                condition_msg = f"Ada tanda-tanda awal {disease_name}. Baru {severity_pct}% area terdampak, bersihkan segera."
 
         return {
             "success": True,
@@ -160,6 +212,7 @@ async def predict(file: UploadFile = File(...)):
                 "severityClass": severity_class,
                 "condition": condition_msg,
                 "processingMode": mode,
+                "damage_pct": severity_pct,
                 "related": []
             }
         }

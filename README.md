@@ -33,7 +33,8 @@ Dibangun menggunakan teknologi modern seperti **React**, **Vite**, dan **JavaScr
 | 🌿 **32+ Penyakit** | Mencakup *early blight*, *bacterial spot*, dan penyakit lainnya |
 | 💊 **Rencana Perawatan** | Setiap diagnosis dilengkapi protokol perawatan dari para ahli |
 | 📊 **Confidence Score** | Tingkat keyakinan AI ditampilkan secara detail |
-| 🔒 **Privacy First** | Gambar tidak disimpan — data pertanian Anda sepenuhnya aman |
+| � **Analisis Keparahan** | Menghitung persentase area daun terinfeksi dengan analisis piksel |
+| �🔒 **Privacy First** | Gambar tidak disimpan — data pertanian Anda sepenuhnya aman |
 
 #### 📱 Halaman Aplikasi
 

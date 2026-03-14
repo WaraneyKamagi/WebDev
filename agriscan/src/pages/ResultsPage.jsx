@@ -297,6 +297,7 @@ export default function ResultsPage({ onNavigate, previewUrl, scanResult }) {
         severityClass: scanResult?.severityClass || 'severity-none',
         note: scanResult?.note,
         condition: scanResult?.condition, // New field from backend
+        damage_pct: scanResult?.damage_pct || 0,
         related: scanResult?.related || []
     };
 
@@ -377,6 +378,12 @@ export default function ResultsPage({ onNavigate, previewUrl, scanResult }) {
                         <span className={`disease-card__severity-badge ${resultData.severityClass}`}>
                             {resultData.severity === 'High' ? 'Keparahan Tinggi' : resultData.severity}
                         </span>
+                        {resultData.name !== 'Healthy' && !isLowConfidence && (
+                            <div className="damage-indicator">
+                                <span className="damage-indicator__label">Index Kerusakan</span>
+                                <span className="damage-indicator__value">{resultData.damage_pct}%</span>
+                            </div>
+                        )}
                     </div>
 
                     <div className="disease-card__body">
