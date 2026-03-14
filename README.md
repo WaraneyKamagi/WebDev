@@ -98,15 +98,9 @@ Buka **[http://localhost:5173](http://localhost:5173)** di browser. 🎉
 | [Vite 7](https://vitejs.dev/) | Build tool & dev server |
 | JavaScript (ESM) | Bahasa pemrograman |
 | Vanilla CSS | Styling & design system |
-| [Space Grotesk](https://fonts.google.com/specimen/Space+Grotesk) | Tipografi |
 
 ---
 
-## 📄 Lisensi
-
-Repositori ini dibuat untuk keperluan akademis — **Semester 6, Mata Kuliah Web Development**.
-
----
 
 <div align="center">
 
