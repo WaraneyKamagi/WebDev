@@ -28,7 +28,6 @@ export default function Navbar({ onNavigate, activePage }) {
                     >
                         Pindai
                     </button>
-                    <button className="navbar__nav-item">Tentang</button>
                 </div>
 
                 {/* CTA */}

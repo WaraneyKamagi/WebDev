@@ -106,6 +106,59 @@ def calculate_pixel_severity(bg_removed_image):
     
     return round(severity_pct, 2), total_leaf_pixels
 
+def is_valid_leaf(bg_removed_image):
+    """
+    Memvalidasi apakah objek di gambar kemungkinan besar adalah daun tomat.
+    Mengandalkan ukuran keseluruhan dari foreground dan warna HSV dominan
+    yang wajar untuk daun (hijau atau kecoklatan).
+    """
+    if bg_removed_image.mode != 'RGBA':
+        return True, ""
+        
+    img_array = np.array(bg_removed_image)
+    leaf_mask = img_array[:, :, 3] > 0
+    total_pixels = np.sum(leaf_mask)
+    
+    h_img, w_img = img_array.shape[:2]
+    img_area = h_img * w_img
+    
+    if total_pixels == 0:
+        return False, "Tidak ada objek yang terdeteksi. Pastikan foto fokus pada daun tomat."
+        
+    if total_pixels / img_area < 0.03:
+        return False, "Objek terlalu kecil. Mohon foto daun dari jarak yang lebih dekat agar terlihat lebih jelas."
+        
+    hsv_image = bg_removed_image.convert('HSV')
+    hsv_array = np.array(hsv_image)
+    
+    h = hsv_array[:, :, 0]
+    s = hsv_array[:, :, 1]
+    v = hsv_array[:, :, 2]
+    
+    # Deteksi warna tidak wajar (Merah terang, Biru, Ungu, Magenta)
+    unnatural_mask = ((h > 110) & (h < 240) & (s > 40)) | (((h < 10) | (h > 240)) & (s > 100) & (v > 100))
+    unnatural_pixels = np.sum(unnatural_mask & leaf_mask)
+    unnatural_ratio = unnatural_pixels / total_pixels
+    
+    if unnatural_ratio > 0.3:
+        return False, "Sistem merekomendasikan mengambil ulang foto. Objek memiliki warna terlalu mencolok (biru/ungu/merah), tidak menyerupai daun."
+        
+    # Deteksi warna hijau dan coklat/kuning (warna rata-rata daun normal atau sakit)
+    green_mask = (h >= 30) & (h <= 100) & (s > 20) & (v > 20)
+    green_pixels = np.sum(green_mask & leaf_mask)
+    green_ratio = green_pixels / total_pixels
+    
+    brown_mask = (h >= 10) & (h < 30) & (s > 20) & (v > 20)
+    brown_pixels = np.sum(brown_mask & leaf_mask)
+    brown_ratio = brown_pixels / total_pixels
+    
+    valid_color_ratio = green_ratio + brown_ratio
+    
+    if valid_color_ratio < 0.15:
+        return False, "Sistem merekomendasikan mengambil ulang foto. Objek tidak memiliki nuansa warna hijau atau kecoklatan seperti daun tomat."
+        
+    return True, "Valid"
+
 @app.get("/")
 def read_root():
     return {"message": "Agriscan SOTA EfficientNet-B1 API is running"}
@@ -123,6 +176,25 @@ async def predict(file: UploadFile = File(...)):
         # --- BACKGROUND REMOVAL ---
         print("Removing background for focus analysis...")
         bg_removed = remove(original_image)
+        
+        # --- VALIDASI OBJEK DAUN ---
+        is_leaf, leaf_msg = is_valid_leaf(bg_removed)
+        if not is_leaf:
+            return {
+                "success": True,
+                "data": {
+                    "name": "Bukan Daun Tomat",
+                    "sciName": "Invalid Image",
+                    "confidence": 0,
+                    "severity": "Unknown",
+                    "severityClass": "severity-none",
+                    "condition": leaf_msg,
+                    "processingMode": "Validation",
+                    "damage_pct": 0.0,
+                    "related": [],
+                    "note": "Silakan ambil ulang foto dan pastikan fokus utama adalah daun tomat."
+                }
+            }
         
         # Handle transparency (convert to white background)
         if bg_removed.mode == 'RGBA':

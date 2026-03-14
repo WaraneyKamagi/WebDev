@@ -14,7 +14,6 @@ export default function App() {
   const [previewUrl, setPreviewUrl] = useState(null);
 
   const [scanResult, setScanResult] = useState(null);
-  const [demoError, setDemoError] = useState(null);
 
   const navigate = (target, params = {}) => {
     if (params.scanResult) {
@@ -29,7 +28,6 @@ export default function App() {
     if (previewUrl) URL.revokeObjectURL(previewUrl);
     const url = URL.createObjectURL(file);
     setPreviewUrl(url);
-    setDemoError(null);
     navigate('scanning');
   };
 
@@ -75,7 +73,7 @@ export default function App() {
         {page === 'error' && (
           <ErrorPage
             onNavigate={navigate}
-            errorType={demoError || 'no_tomato'}
+            errorType={'no_tomato'}
             previewUrl={previewUrl}
           />
         )}

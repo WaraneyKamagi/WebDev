@@ -12,7 +12,7 @@ const STEPS = [
         num: '01',
         icon: '📷',
         title: 'Ambil Foto',
-        desc: 'Ambil foto daun, buah, atau batang tomat yang terkena penyakit secara jelas.',
+        desc: 'Ambil foto daun yang terkena penyakit secara jelas.',
     },
     {
         num: '02',
@@ -29,17 +29,18 @@ const STEPS = [
 ];
 
 const FEAT_CARDS = [
-    { icon: '🎯', title: 'Akurasi Tertinggi', desc: 'Dilatih dengan arsitektur SOTA EfficientNet-B1 untuk akurasi validasi 99.7% yang memimpin industri.' },
-    { icon: '🚀', title: 'Akselerasi GPU', desc: 'Ditenagai oleh komputasi NVIDIA RTX untuk inferensi secepat kilat dalam hitungan detik.' },
-    { icon: '🌿', title: 'Augmentasi Padat', desc: 'Model tangguh yang tahan terhadap gangguan cahaya, blur, dan noise lingkungan di lapangan.' },
-    { icon: '💊', title: 'Rencana Perawatan', desc: 'Setiap diagnosa dilengkapi dengan protokol perawatan kurasi ahli dan alternatif organik.' },
-    { icon: '📊', title: 'Batas Keamanan', desc: 'Penyaringan berbasis kepercayaan memastikan Bapak hanya mendapatkan hasil yang valid dan akurat.' },
-    { icon: '🔒', title: 'Privasi Mutlak', desc: 'Gambar diproses secara lokal dan instan. Data lahan Bapak aman dan tidak disimpan di database.' },
+    { icon: '🎯', title: 'Diagnosis Tepat Sasaran', desc: 'Dapatkan hasil identifikasi penyakit yang akurat untuk mencegah gagal panen lebih dini.' },
+    { icon: '🌿', title: 'Andal di Segala Kondisi', desc: 'Sistem tetap bekerja maksimal meskipun foto diambil dengan cahaya redup atau sedikit buram.' },
+    { icon: '💊', title: 'Panduan Praktis', desc: 'Tidak hanya mendeteksi masalah, kami juga memberikan langkah perawatan spesifik untuk menyelamatkan tanaman Anda.' },
+    { icon: '📊', title: 'Hasil yang Bisa Dipercaya', desc: 'Memberikan informasi yang jujur dan valid, sehingga Anda bisa mengambil tindakan dengan tenang.' },
+    { icon: '🔒', title: 'Aman dan Rahasia', desc: 'Foto tanaman Anda langsung diproses tanpa disimpan di sistem kami, menjaga privasi data kebun Anda.' },
+    { icon: '⚡', title: 'Respon Super Cepat', desc: 'Dapatkan hasil analisis penyakit dan solusi perawatannya dalam hitungan detik tanpa perlu menunggu lama.' },
 ];
 
 export default function HomePage({ onNavigate, onFileSelected }) {
     const [dragover, setDragover] = useState(false);
     const fileRef = useRef();
+    const cameraRef = useRef();
 
     const handleDrop = (e) => {
         e.preventDefault();
@@ -86,9 +87,6 @@ export default function HomePage({ onNavigate, onFileSelected }) {
                             <UploadIcon size={18} color="white" />
                             Pindai Tanaman Anda
                         </button>
-                        <button className="btn btn-outline btn-lg">
-                            Lihat Demo
-                        </button>
                     </div>
 
                     <div className="hero__stats">
@@ -131,6 +129,14 @@ export default function HomePage({ onNavigate, onFileSelected }) {
                             style={{ display: 'none' }}
                             onChange={handleFileChange}
                         />
+                        <input
+                            ref={cameraRef}
+                            type="file"
+                            accept="image/*"
+                            capture="environment"
+                            style={{ display: 'none' }}
+                            onChange={handleFileChange}
+                        />
                         <div className="dropzone__icon">
                             <UploadIcon size={24} color="var(--color-primary)" />
                         </div>
@@ -164,7 +170,11 @@ export default function HomePage({ onNavigate, onFileSelected }) {
                             <UploadIcon size={15} color="white" />
                             Ambil Gambar
                         </button>
-                        <button className="btn btn-outline" style={{ flex: 1 }}>
+                        <button
+                            className="btn btn-outline"
+                            style={{ flex: 1 }}
+                            onClick={() => cameraRef.current?.click()}
+                        >
                             <CameraIcon size={15} color="currentColor" />
                             Gunakan Kamera
                         </button>
@@ -179,7 +189,7 @@ export default function HomePage({ onNavigate, onFileSelected }) {
                         <span className="section__eyebrow">Cara Kerja</span>
                         <h2 className="section__title">Tiga langkah mudah menuju panen sehat</h2>
                         <p className="section__subtitle">
-                            Bapak tidak perlu jadi ahli botani. AI kami merangkum semuanya agar Bapak bisa fokus pada hasil panen.
+                            anda tidak perlu jadi ahli botani. AI kami merangkum semuanya agar anda bisa fokus pada hasil panen.
                         </p>
                     </div>
                     <div className="steps-grid">
@@ -200,7 +210,7 @@ export default function HomePage({ onNavigate, onFileSelected }) {
                 <div className="section">
                     <div className="section__header">
                         <span className="section__eyebrow">Fitur Utama</span>
-                        <h2 className="section__title">Semua yang Bapak butuhkan</h2>
+                        <h2 className="section__title">Semua yang anda butuhkan</h2>
                         <p className="section__subtitle">
                             Diagnostik tanaman tingkat profesional, ditenagai oleh computer vision tercanggih.
                         </p>

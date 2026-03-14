@@ -248,7 +248,7 @@ const DISEASE_DATABASE = {
     'healthy': {
         name: 'Healthy',
         sciName: 'Solanum lycopersicum',
-        description: 'Tanaman tomat Bapak terlihat optimal dan tidak menunjukkan gejala penyakit patogen yang nyata.',
+        description: 'Tanaman tomat anda terlihat optimal dan tidak menunjukkan gejala penyakit patogen yang nyata.',
         symptoms: [
             'Daun berwarna hijau segar dan merata',
             'Tekstur daun kaku dan batang kokoh',

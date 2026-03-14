@@ -16,6 +16,7 @@ export default function ScanPage({ onNavigate, uploadedFile, onFileSelected }) {
     const [currentStep, setCurrentStep] = useState(0);
     const [progress, setProgress] = useState(0);
     const fileRef = useRef();
+    const cameraRef = useRef();
 
     useEffect(() => {
         if (uploadedFile) {
@@ -115,7 +116,7 @@ export default function ScanPage({ onNavigate, uploadedFile, onFileSelected }) {
                 {/* Header */}
                 <div className="scan-page__header">
                     <h1 className="scan-page__title">
-                        {scanning ? 'Menganalisis Tanaman...' : 'Pindai Tanaman Bapak'}
+                        {scanning ? 'Menganalisis Tanaman...' : 'Pindai Tanaman anda'}
                     </h1>
                     <p className="scan-page__subtitle">
                         {scanning
@@ -169,6 +170,14 @@ export default function ScanPage({ onNavigate, uploadedFile, onFileSelected }) {
                                         style={{ display: 'none' }}
                                         onChange={handleFileChange}
                                     />
+                                    <input
+                                        ref={cameraRef}
+                                        type="file"
+                                        accept="image/*"
+                                        capture="environment"
+                                        style={{ display: 'none' }}
+                                        onChange={handleFileChange}
+                                    />
                                     <div className="dropzone__icon">
                                         <UploadIcon size={28} color="var(--color-primary)" />
                                     </div>
@@ -189,7 +198,11 @@ export default function ScanPage({ onNavigate, uploadedFile, onFileSelected }) {
                                     <UploadIcon size={17} color="white" />
                                     {previewUrl ? 'Ganti Gambar' : 'Ambil Gambar'}
                                 </button>
-                                <button className="btn btn-outline btn-lg" style={{ flex: 1 }}>
+                                <button
+                                    className="btn btn-outline btn-lg"
+                                    style={{ flex: 1 }}
+                                    onClick={() => cameraRef.current?.click()}
+                                >
                                     <CameraIcon size={17} color="currentColor" />
                                     Gunakan Kamera
                                 </button>

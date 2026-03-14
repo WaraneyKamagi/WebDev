@@ -2,7 +2,7 @@ import { ArrowLeftIcon, RefreshIcon, UploadIcon } from '../icons.jsx';
 
 const TIPS = {
     no_tomato: [
-        { icon: '🍅', text: 'Pastikan gambar menunjukkan daun, buah, atau batang tomat dengan jelas' },
+        { icon: '🍅', text: 'Pastikan gambar menunjukkan daun dengan jelas' },
         { icon: '🔍', text: 'Hindari gambar dengan banyak jenis tanaman dalam satu bingkai' },
         { icon: '📐', text: 'Posisikan tanaman tomat di tengah foto' },
         { icon: '💡', text: 'Pencahayaan yang baik membantu AI mengidentifikasi tanaman' },
@@ -25,7 +25,7 @@ export default function ErrorPage({ onNavigate, errorType = 'no_tomato', preview
             badgeSubtitle: 'Gagal mengidentifikasi tanaman tomat',
             bodyTitle: 'Tanaman Tomat Tidak Ditemukan',
             bodyDesc:
-                "AI kami tidak dapat mendeteksi jaringan tanaman tomat pada gambar yang Bapak unggah. Hal ini mungkin karena gambar tidak berisi tanaman tomat, tanaman tidak terlihat jelas, atau resolusi gambar terlalu rendah.",
+                "AI kami tidak dapat mendeteksi jaringan tanaman tomat pada gambar yang anda unggah. Hal ini mungkin karena gambar tidak berisi tanaman tomat, tanaman tidak terlihat jelas, atau resolusi gambar terlalu rendah.",
             tipsTitle: 'Cara mendapatkan hasil lebih baik',
         },
         blurry: {
@@ -34,7 +34,7 @@ export default function ErrorPage({ onNavigate, errorType = 'no_tomato', preview
             badgeSubtitle: 'Foto terlalu buram untuk dianalisis',
             bodyTitle: 'Gambar Terlalu Buram untuk Dianalisis',
             bodyDesc:
-                "Gambar yang Bapak unggah tidak memiliki ketajaman yang cukup bagi AI kami untuk melakukan deteksi penyakit secara akurat. Gambar yang buram dapat menyebabkan hasil yang salah, jadi kami memerlukan foto yang fokus dan jelas.",
+                "Gambar yang anda unggah tidak memiliki ketajaman yang cukup bagi AI kami untuk melakukan deteksi penyakit secara akurat. Gambar yang buram dapat menyebabkan hasil yang salah, jadi kami memerlukan foto yang fokus dan jelas.",
         },
     };
 
@@ -57,7 +57,7 @@ export default function ErrorPage({ onNavigate, errorType = 'no_tomato', preview
                             Analisis Gagal
                         </h1>
                         <p style={{ fontSize: '13px', color: 'var(--color-text-muted)', marginTop: '3px' }}>
-                            Kami menemukan kendala pada gambar Bapak
+                            Kami menemukan kendala pada gambar anda
                         </p>
                     </div>
                 </div>
