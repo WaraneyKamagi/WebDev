@@ -3,7 +3,7 @@ uvicorn==0.28.0
 python-multipart==0.0.12
 pillow==11.1.0
 --extra-index-url https://download.pytorch.org/whl/cpu
-torch>=2.0.0+cpu
-torchvision>=0.15.0+cpu
+torch==2.0.1+cpu
+torchvision==0.15.2+cpu
 rembg
 onnxruntime
