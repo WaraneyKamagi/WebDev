@@ -64,7 +64,7 @@ export default function ScanPage({ onNavigate, uploadedFile, onFileSelected }) {
             const formData = new FormData();
             formData.append('file', uploadedFile);
 
-            const apiUrl = import.meta.env.VITE_AI_API_URL || 'http://localhost:8002/predict';
+            const apiUrl = import.meta.env.VITE_AI_API_URL || 'http://210.79.191.138:8002/predict';
 
             const response = await fetch(apiUrl, {
                 method: 'POST',

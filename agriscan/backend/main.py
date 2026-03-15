@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 import io
@@ -8,7 +9,7 @@ from PIL import Image
 import numpy as np
 import cv2
 
-from rembg import remove
+from rembg import remove, new_session
 
 app = FastAPI()
 
@@ -21,6 +22,7 @@ app.add_middleware(
 )
 
 MODEL = None
+REMBG_SESSION = None
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 TOMATO_CLASSES = [
@@ -46,14 +48,26 @@ async def load_model():
         num_ftrs = model.classifier[1].in_features
         model.classifier[1] = nn.Linear(num_ftrs, len(TOMATO_CLASSES))
         
-        # Load Weights
-        weight_path = r"C:\Users\Administrator\OneDrive\Documents\coding\web_dev\WebDev\agriscan\backend\model\SOTA_Tomato_EfficientNet.pth"
+        # Load Weights (Production Ready: relative path)
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        
+        # Railway will have it in /app/backend/model/...
+        weight_path = os.path.join(current_dir, "model", "SOTA_Tomato_EfficientNet.pth")
+        
+        if not os.path.exists(weight_path):
+            # Fallback for local development
+            weight_path = os.path.join(current_dir, "model", "SOTA_Tomato_EfficientNet.pth") # Keep safe locally
         model.load_state_dict(torch.load(weight_path, map_location=DEVICE))
         model.to(DEVICE)
         model.eval()
         
         MODEL = model
         print("SOTA Model loaded successfully (99.83% Accuracy).")
+        
+        global REMBG_SESSION
+        print("Initializing Rembg session (U2Net) to prevent timeouts...")
+        REMBG_SESSION = new_session("u2net")
+        print("Rembg session loaded successfully.")
     except Exception as e:
         print("Failed to load SOTA model:", e)
 
@@ -186,6 +200,10 @@ def is_valid_leaf(bg_removed_image):
 def read_root():
     return {"message": "Agriscan SOTA EfficientNet-B1 API is running"}
 
+@app.options("/predict")
+async def options_predict():
+    return {"message": "CORS OK"}
+
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
     if MODEL is None:
@@ -198,7 +216,7 @@ async def predict(file: UploadFile = File(...)):
         
         # --- BACKGROUND REMOVAL ---
         print("Removing background for focus analysis...")
-        bg_removed = remove(original_image)
+        bg_removed = remove(original_image, session=REMBG_SESSION)
         
         # --- VALIDASI OBJEK DAUN ---
         is_leaf, leaf_msg = is_valid_leaf(bg_removed)
