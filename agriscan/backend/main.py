@@ -56,8 +56,12 @@ async def load_model():
         
         if not os.path.exists(weight_path):
             # Fallback for local development
+<<<<<<< HEAD
             weight_path = r"c:\Users\slarkboy\Semester 6\Web-Development\WebDev\agriscan\backend\model\SOTA_Tomato_EfficientNet.pth"
 
+=======
+            weight_path = os.path.join(current_dir, "model", "SOTA_Tomato_EfficientNet.pth") # Keep safe locally
+>>>>>>> developer
         model.load_state_dict(torch.load(weight_path, map_location=DEVICE))
         model.to(DEVICE)
         model.eval()
@@ -200,6 +204,10 @@ def is_valid_leaf(bg_removed_image):
 @app.get("/")
 def read_root():
     return {"message": "Agriscan SOTA EfficientNet-B1 API is running"}
+
+@app.options("/predict")
+async def options_predict():
+    return {"message": "CORS OK"}
 
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
