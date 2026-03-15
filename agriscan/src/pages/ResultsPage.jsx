@@ -339,14 +339,10 @@ export default function ResultsPage({ onNavigate, previewUrl, scanResult }) {
                         <span style={{ color: 'var(--color-text-muted)' }}>Proses Lokal (Tanpa Database)</span>
                     </div>
                 </div>
-                <div style={{ marginLeft: 'auto', display: 'flex', gap: '10px' }}>
+                <div className="results-header__actions">
                     <button className="btn btn-outline btn-sm" onClick={() => onNavigate('scan')}>
                         <RefreshIcon size={14} />
                         Pindai Baru
-                    </button>
-                    <button className="btn btn-primary btn-sm">
-                        <DownloadIcon size={14} color="white" />
-                        Ekspor Laporan
                     </button>
                 </div>
             </div>
@@ -499,7 +495,7 @@ export default function ResultsPage({ onNavigate, previewUrl, scanResult }) {
                             <div className="result-section__title-icon">🛡️</div>
                             Strategi Pencegahan
                         </div>
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
+                        <div className="prevention-grid">
                             {resultData.prevention.map((p, i) => (
                                 <div
                                     key={i}
@@ -521,17 +517,7 @@ export default function ResultsPage({ onNavigate, previewUrl, scanResult }) {
                     </div>
 
                     {/* CTA */}
-                    <div
-                        style={{
-                            display: 'flex',
-                            gap: '12px',
-                            padding: '20px',
-                            background: 'linear-gradient(135deg, var(--color-primary-bg), var(--color-surface))',
-                            borderRadius: 'var(--radius-xl)',
-                            border: '1px solid var(--color-border)',
-                            alignItems: 'center',
-                        }}
-                    >
+                    <div className="expert-cta">
                         <div style={{ flex: 1 }}>
                             <div style={{ fontSize: '15px', fontWeight: '700', color: 'var(--color-text)', marginBottom: '4px' }}>
                                 Butuh saran ahli?

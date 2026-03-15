@@ -30,15 +30,7 @@ export default function Navbar({ onNavigate, activePage }) {
                     </button>
                 </div>
 
-                {/* CTA */}
-                <div className="navbar__cta">
-                    <button
-                        className="btn btn-primary"
-                        onClick={() => onNavigate('scan')}
-                    >
-                        Coba Gratis
-                    </button>
-                </div>
+
             </div>
         </nav>
     );
