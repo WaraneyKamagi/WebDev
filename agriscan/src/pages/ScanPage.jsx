@@ -189,10 +189,9 @@ export default function ScanPage({ onNavigate, uploadedFile, onFileSelected }) {
 
                         {/* Bottom buttons */}
                         {!scanning && (
-                            <div style={{ display: 'flex', gap: '12px' }}>
+                            <div className="scan-actions">
                                 <button
                                     className="btn btn-primary btn-lg"
-                                    style={{ flex: 1 }}
                                     onClick={() => fileRef.current?.click()}
                                 >
                                     <UploadIcon size={17} color="white" />
@@ -200,7 +199,6 @@ export default function ScanPage({ onNavigate, uploadedFile, onFileSelected }) {
                                 </button>
                                 <button
                                     className="btn btn-outline btn-lg"
-                                    style={{ flex: 1 }}
                                     onClick={() => cameraRef.current?.click()}
                                 >
                                     <CameraIcon size={17} color="currentColor" />
@@ -209,7 +207,6 @@ export default function ScanPage({ onNavigate, uploadedFile, onFileSelected }) {
                                 {previewUrl && (
                                     <button
                                         className="btn btn-primary btn-lg"
-                                        style={{ flex: 1 }}
                                         onClick={startScan}
                                     >
                                         Analisis Sekarang

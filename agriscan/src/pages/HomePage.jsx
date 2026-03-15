@@ -111,7 +111,6 @@ export default function HomePage({ onNavigate, onFileSelected }) {
                 <div className="upload-panel">
                     <div className="upload-panel__header">
                         <span className="upload-panel__title">Pindai Cepat</span>
-                        <span className="upload-panel__tag">Gratis</span>
                     </div>
 
                     <div
@@ -161,7 +160,7 @@ export default function HomePage({ onNavigate, onFileSelected }) {
                         ))}
                     </div>
 
-                    <div style={{ marginTop: '16px', display: 'flex', gap: '10px' }}>
+                    <div className="upload-panel__buttons">
                         <button
                             className="btn btn-primary"
                             style={{ flex: 1 }}
@@ -183,7 +182,7 @@ export default function HomePage({ onNavigate, onFileSelected }) {
             </section>
 
             {/* How It Works */}
-            <section style={{ background: 'var(--color-surface)', borderTop: '1px solid var(--color-border)', borderBottom: '1px solid var(--color-border)', padding: '64px 0' }}>
+            <section className="how-it-works-section">
                 <div className="section" style={{ padding: '0 40px' }}>
                     <div className="section__header">
                         <span className="section__eyebrow">Cara Kerja</span>
