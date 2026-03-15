@@ -7,6 +7,7 @@ import torch.nn as nn
 from torchvision import transforms, models
 from PIL import Image
 import numpy as np
+import cv2
 
 from rembg import remove, new_session
 
@@ -155,8 +156,8 @@ def is_valid_leaf(bg_removed_image):
     unnatural_pixels = np.sum(unnatural_mask & leaf_mask)
     unnatural_ratio = unnatural_pixels / total_pixels
     
-    if unnatural_ratio > 0.3:
-        return False, "Sistem merekomendasikan mengambil ulang foto. Objek memiliki warna terlalu mencolok (biru/ungu/merah), tidak menyerupai daun."
+    if unnatural_ratio > 0.20:
+        return False, "Sistem merekomendasikan mengambil ulang foto. Objek terlalu banyak mengandung warna tidak wajar (biru/ungu/merah cerah)."
         
     # Deteksi warna hijau dan coklat/kuning (warna rata-rata daun normal atau sakit)
     green_mask = (h >= 30) & (h <= 100) & (s > 20) & (v > 20)
@@ -169,8 +170,30 @@ def is_valid_leaf(bg_removed_image):
     
     valid_color_ratio = green_ratio + brown_ratio
     
-    if valid_color_ratio < 0.15:
-        return False, "Sistem merekomendasikan mengambil ulang foto. Objek tidak memiliki nuansa warna hijau atau kecoklatan seperti daun tomat."
+    if valid_color_ratio < 0.45:
+        return False, "Sistem merekomendasikan mengambil ulang foto. Objek dominan warna selain hijau/coklat, tidak merepresentasikan daun tomat."
+        
+    # --- TEXTURE AND EDGE ANALYSIS (OPENCV) ---
+    # Convert RGBA numpy array to BGR for OpenCV
+    cv_image = cv2.cvtColor(img_array, cv2.COLOR_RGBA2BGR)
+    gray_image = cv2.cvtColor(cv_image, cv2.COLOR_BGR2GRAY)
+    
+    # 1. Laplacian Variance (mendeteksi blur / permukaan terlalu halus seperti gambar ilustrasi)
+    variance = cv2.Laplacian(gray_image, cv2.CV_64F).var()
+    print(f"Texture Variance (Laplacian): {variance}")
+    
+    if variance < 20: 
+         return False, "Permukaan objek terlalu halus atau sangat buram. Pastikan foto adalah daun sungguhan berduri/urat yang terlihat jelas."
+
+    # 2. Edge Density (mendeteksi urat daun dan tepi kasar)
+    # Gunakan Canny edge detector
+    edges = cv2.Canny(gray_image, 50, 150)
+    edges_inside = edges & leaf_mask # Hanya hitung edge di dalam area daun
+    edge_density = np.sum(edges_inside > 0) / total_pixels
+    print(f"Edge Density: {edge_density}")
+    
+    if edge_density < 0.01: 
+         return False, "Objek tidak memiliki pola urat daun yang wajar. Kemungkinan besar bukan daun tanaman asli."
         
     return True, "Valid"
 
